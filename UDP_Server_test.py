@@ -4,7 +4,7 @@ import time
 import socket
 import struct
 
-host = 'Your address'
+host = 'Your IP address'
 port = 8000
 
 UDP_server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
