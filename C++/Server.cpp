@@ -9,16 +9,11 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <errno.h>
-#define BUFF_SIZE 24
-#define BUFFER_SIZE 4096
 
 using namespace std;
 
 int main(int argc, char *argv[])
 {
-        char readBuff[BUFFER_SIZE];
-        char sendBuff[BUFFER_SIZE];
-
         struct sockaddr_in serverAddress, clientAddress;
 
         int server_fd, client_fd;
@@ -33,8 +28,8 @@ int main(int argc, char *argv[])
         memset(&clientAddress, 0, sizeof(clientAddress));
 
         serverAddress.sin_family = AF_INET;
-        serverAddress.sin_addr.s_addr = inet_addr("192.168.0.79"); // Your Addr Name
-        serverAddress.sin_port = htons(8000); // Your Port Name
+        serverAddress.sin_addr.s_addr = inet_addr("192.168.0.6");
+        serverAddress.sin_port = htons(8000);
 
         if ((server_fd = socket(AF_INET, SOCK_DGRAM, 0)) == -1)
         {
@@ -50,11 +45,21 @@ int main(int argc, char *argv[])
         printf("Server : waiting connection request. \n");
 
         // Data structure 
-        struct Data{
-        double data1;
-        double data2;
-        double data3;
-        }Data;  
+        struct SendData{
+        double sdata1;
+        double sdata2;
+        double sdata3;
+        }sData;  
+
+        sData.sdata1 = 1.1;
+        sData.sdata2 = 2.2;
+        sData.sdata3 = 3.3; 
+
+        struct RecvData{
+        double rdata1;
+        double rdata2;
+        double rdata3;
+        }rData;  
 
         while(1)
         {
@@ -63,10 +68,17 @@ int main(int argc, char *argv[])
                 getpeername(client_fd, (struct sockaddr*)&clientAddress, &connectSocketLength);
                 char clientIP[sizeof(clientAddress.sin_addr) + 1] = {0};
                 sprintf(clientIP,"%s",inet_ntoa(clientAddress.sin_addr));
-                recvfrom(server_fd, (char *)&Data, sizeof(Data), 0, (struct sockaddr*)&clientAddress, (socklen_t*)&client_addr_size);
-                cout << Data.data1 << endl;
-                cout << Data.data2 << endl;
-                cout << Data.data3 << endl;
+
+                client_addr_size = sizeof(clientAddress);
+
+                recvfrom(server_fd, (char *)&rData, sizeof(rData), 0, (struct sockaddr*)&clientAddress, (socklen_t*)&client_addr_size);
+
+                cout << rData.rdata1 << endl;
+                cout << rData.rdata2 << endl;
+                cout << rData.rdata3 << endl;
+
+                sendto(server_fd, (char *)&sData, sizeof(sData), 0, (struct sockaddr*)&clientAddress, sizeof(clientAddress));
+
         }
 
         close(server_fd);
