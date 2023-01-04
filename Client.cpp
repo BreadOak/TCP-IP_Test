@@ -29,8 +29,8 @@ int main(int argc, char *argv[])
         memset(&serverAddress, 0, sizeof(serverAddress));
 
         serverAddress.sin_family = AF_INET;
-        inet_aton("192.168.0.79", (struct in_addr*) &serverAddress.sin_addr.s_addr);
-        serverAddress.sin_port = htons(8000);
+        inet_aton("0.0.0.0", (struct in_addr*) &serverAddress.sin_addr.s_addr); // Your Addr Name
+        serverAddress.sin_port = htons(Portname); // Your Port Name
 
         // 소켓 생성
         if ((client_socket = socket(PF_INET, SOCK_DGRAM, 0)) == -1)
