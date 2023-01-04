@@ -28,8 +28,8 @@ int main(int argc, char *argv[])
         memset(&clientAddress, 0, sizeof(clientAddress));
 
         serverAddress.sin_family = AF_INET;
-        serverAddress.sin_addr.s_addr = inet_addr("192.168.0.6");
-        serverAddress.sin_port = htons(8000);
+        serverAddress.sin_addr.s_addr = inet_addr("0.0.0.0");
+        serverAddress.sin_port = htons(0000);
 
         if ((server_fd = socket(AF_INET, SOCK_DGRAM, 0)) == -1)
         {
