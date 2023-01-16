@@ -64,7 +64,7 @@ void MyThread::readyRead()
     socket->write(sData);
 
     // will write on server side window
-    qDebug() << socketDescriptor << " Data in: " << sData.data();
+    qDebug() << socketDescriptor << " Data in: " << sData;
 
 }
 
