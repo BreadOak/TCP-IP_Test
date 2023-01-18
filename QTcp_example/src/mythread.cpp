@@ -44,6 +44,7 @@ void MyThread::run()
 
 void MyThread::readyRead()
 {
+    ///// Read /////
     // Read Data from client
     QByteArray Data = socket->readAll();
 
@@ -51,6 +52,7 @@ void MyThread::readyRead()
     qDebug() << socketDescriptor << " Data in: " << Data;
     parseMsg(Data);
 
+    ///// Write /////
     // Data vector
     double vec[2];
     vec[0] = 5.5;
@@ -58,13 +60,13 @@ void MyThread::readyRead()
 
     // Double Array to QByteArray
     QByteArray sData;
-    sData = QByteArray::fromRawData(reinterpret_cast<const char*>(vec), sizeof(vec)*sizeof(double));
+    sData = QByteArray::fromRawData((char*)vec, sizeof(vec));
 
     // Write Data to client
     socket->write(sData);
 
     // will write on server side window
-    qDebug() << socketDescriptor << " Data in: " << sData;
+//    qDebug() << socketDescriptor << " Data in: " << sData;
 
 }
 
@@ -72,24 +74,36 @@ void MyThread::disconnected()
 {
     qDebug() << socketDescriptor << " Disconnected";
 
+
     socket->deleteLater();
     exit(0);
 }
 
 void MyThread::parseMsg(QByteArray Data){
 
-    double rData[2];
+    if (count == 0)
+    {
+        xCorr.clear();
+        yCorr.clear();
+    }
 
-    xCorr.clear();
-    yCorr.clear();
+    double rData[100];
 
-    memcpy(rData, Data.data(), sizeof(rData));
-    qDebug() << "data1" << rData[0] ;
-    qDebug() << "data2" << rData[1] ;
+    memcpy((char *)&rData, Data.data(), sizeof(rData));
 
-    xCorr.push_back(rData[0]);
-    yCorr.push_back(rData[1]);
+    for (int i=0; i<50; ++i)
+    {
+        xCorr.push_back(rData[i]);
+        yCorr.push_back(rData[i+50]);
+    }
 
     // emit signal
     emit newDataRecieved(xCorr,yCorr);
+
+    ++count;
+
+    if (count == 400)
+    {
+        count = 0;
+    }
 }

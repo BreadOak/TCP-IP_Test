@@ -12,6 +12,7 @@ class MyThread : public QThread
 public:
     explicit MyThread(qintptr ID, QObject *parent = 0);
 
+
     void run();
 
 signals:
@@ -26,6 +27,7 @@ private:
     QTcpSocket *socket;
     qintptr socketDescriptor;
     QVector<double> xCorr,yCorr;
+    int count = 0;
     void parseMsg(QByteArray Data);
 };
 

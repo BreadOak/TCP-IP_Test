@@ -12,15 +12,14 @@ plotNetworkData::plotNetworkData(QWidget *parent)
     ui->customPlot->graph(0)->setLineStyle(QCPGraph::lsLine);
     ui->customPlot->xAxis->setLabel("X");
     ui->customPlot->yAxis->setLabel("Y");
-    ui->customPlot->xAxis->setRange(-6000, 100);
-    ui->customPlot->yAxis->setRange(-6000, 8000);
+    ui->customPlot->xAxis->setRange(0, 10);
+    ui->customPlot->yAxis->setRange(0, 100);
     ui->customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
 
     ui->plotTypeComboBox->setCurrentIndex(4);
     ui->lineStyleComboBox->setCurrentIndex(1);
     ui->ipAddressEdit->setText("192.168.0.6");
     ui->portLineEdit->setText("8000");
-
 
 //    MyThread m;
 //    connect(&MyThread,SIGNAL(newDataRecieved(QVector<double> x,QVector<double> y)),this,SLOT(plotNewValues(QVector<double> x,QVector<double> y)));
@@ -79,7 +78,6 @@ void plotNetworkData::on_plotTypeComboBox_currentIndexChanged(int index)
         case 10:
                 ui->customPlot->graph(0)->setScatterStyle(QCPScatterStyle::ssTriangleInverted);
                 break;
-
         case 11:
                 ui->customPlot->graph(0)->setScatterStyle(QCPScatterStyle::ssCrossSquare);
                 break;
@@ -101,8 +99,6 @@ void plotNetworkData::on_plotTypeComboBox_currentIndexChanged(int index)
         default:
                 ui->customPlot->graph(0)->setScatterStyle(QCPScatterStyle::ssCross);
                 break;
-
-
     }
 
     ui->customPlot->replot();
@@ -133,7 +129,6 @@ void plotNetworkData::on_lineStyleComboBox_currentIndexChanged(int index)
         default:
                 ui->customPlot->graph(0)->setLineStyle(QCPGraph::lsNone);
                 break;
-
     }
     ui->customPlot->replot();
     ui->customPlot->update();
