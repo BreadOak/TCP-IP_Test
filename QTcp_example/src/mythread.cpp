@@ -95,6 +95,12 @@ void MyThread::parseMsg(QByteArray Data){
     {
         xCorr.push_back(rData[i]);
         yCorr.push_back(rData[i+50]);
+
+        if (count >= 400)
+        {
+            xCorr.remove(0);
+            yCorr.remove(0);
+        }
     }
 
     // emit signal
@@ -102,8 +108,8 @@ void MyThread::parseMsg(QByteArray Data){
 
     ++count;
 
-    if (count == 400)
-    {
-        count = 0;
-    }
+//    if (count == 400)
+//    {
+//        count = 0;
+//    }
 }
