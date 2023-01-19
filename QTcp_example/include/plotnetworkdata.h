@@ -24,10 +24,24 @@ private slots:
 
     void on_lineStyleComboBox_currentIndexChanged(int index);
 
+    void on_clearButton_clicked();
+
+    void on_ControllerComboBox_currentIndexChanged(int index);
+
+    void on_setButton_clicked();
+
+    void on_connectButton_clicked();
+
+    void on_ControllerComboBox_currentIndexChanged(const QString &arg1);
+
 private:
     Ui::plotNetworkData *ui;
 
 public slots:
     void plotNewValues(QVector<double> x,QVector<double> y);
+    void clearPlot();
 };
+
+//extern int Type;
+
 #endif // PLOTNETWORKDATA_H

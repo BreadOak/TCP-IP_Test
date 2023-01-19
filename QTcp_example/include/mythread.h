@@ -1,6 +1,6 @@
 #ifndef MYTHREAD_H
 #define MYTHREAD_H
-
+#include "plotnetworkdata.h"
 #include <QtNetwork>
 #include <QThread>
 #include <QTcpSocket>
