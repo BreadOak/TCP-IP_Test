@@ -10,7 +10,7 @@ MyServer::MyServer(QObject *parent) :
 
 void MyServer::startServer()
 {
-    int port = 8000;
+    int port = "Port Number";
 
     if(!this->listen(QHostAddress::Any,port))
     {
