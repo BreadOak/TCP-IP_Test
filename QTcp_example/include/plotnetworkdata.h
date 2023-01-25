@@ -2,6 +2,7 @@
 #define PLOTNETWORKDATA_H
 
 #include <QMainWindow>
+#include <libssh/libssh.h>
 #include "qcustomplot.h"
 #include "mythread.h"
 #include "myserver.h"
@@ -33,6 +34,12 @@ private slots:
     void on_connectButton_clicked();
 
     void on_ControllerComboBox_currentIndexChanged(const QString &arg1);
+
+    void on_disconnectButton_clicked();
+
+    void on_runButton_clicked();
+
+    void on_stopButton_clicked();
 
 private:
     Ui::plotNetworkData *ui;

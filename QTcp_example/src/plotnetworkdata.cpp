@@ -1,10 +1,16 @@
 #include "plotnetworkdata.h"
 #include "ui_plotnetworkdata.h"
 
+extern int OnOffSignal;
+extern int RunSignal;
 extern int PlotType;       // Plot type Global variable
 extern int CtrlMode;       // Ctrl mode Global variable
 extern int Controller;     // Controller Global variable
 extern double TargetValue; // TargetValue Global variable
+
+ssh_session my_ssh_session;
+ssh_channel channel;
+int rc;
 
 plotNetworkData::plotNetworkData(QWidget *parent)
     : QMainWindow(parent)
@@ -31,6 +37,8 @@ plotNetworkData::plotNetworkData(QWidget *parent)
     ui->Tar_value->setValidator(validator);
     ui->StepIP->setInputMask("000.000.000.000");
 
+    RunSignal = 0;
+
 //    MyThread m;
 //    connect(&MyThread,SIGNAL(newDataRecieved(QVector<double> x,QVector<double> y)),this,SLOT(plotNewValues(QVector<double> x,QVector<double> y)));
     ServerThread *thread = new ServerThread(this);
@@ -46,11 +54,13 @@ plotNetworkData::~plotNetworkData()
 void plotNetworkData::plotNewValues(QVector<double> x, QVector<double> y)
 {
 //    qDebug()<< "Got data x:"<<x<<" y:"<<y;
-    ui->customPlot->graph(0)->setData(x, y);
-    ui->customPlot->rescaleAxes();
-    ui->customPlot->replot();
-    ui->customPlot->update();
-    ui->Act_value->setText("0");
+    if (RunSignal){
+        ui->customPlot->graph(0)->setData(x, y);
+        ui->customPlot->rescaleAxes();
+        ui->customPlot->replot();
+        ui->customPlot->update();
+        ui->Act_value->setText("0");
+    }
 }
 
 void plotNetworkData::clearPlot()
@@ -115,9 +125,69 @@ void plotNetworkData::on_setButton_clicked()
 
 void plotNetworkData::on_connectButton_clicked()
 {
-    ui->StepIP->text();
-    ui->UserID->text();
-    ui->Password->text();
+    OnOffSignal = 1; // On
+
+    QString Step_IP = ui->StepIP->text();
+    QString User_ID = ui->UserID->text();
+    QString Pass_Word = ui->Password->text();
+
+    ///// Open session and set options /////
+    my_ssh_session = ssh_new();
+    if (my_ssh_session == NULL)
+      exit(-1);
+    ssh_options_set(my_ssh_session, SSH_OPTIONS_HOST, Step_IP.toStdString().c_str());
+    ssh_options_set(my_ssh_session, SSH_OPTIONS_USER, User_ID.toStdString().c_str());
+
+    ///// Connect to server /////
+    rc = ssh_connect(my_ssh_session);
+    if (rc != SSH_OK)
+    {
+      fprintf(stderr, "Error connecting to localhost: %s\n",
+              ssh_get_error(my_ssh_session));
+      ssh_free(my_ssh_session);
+      exit(-1);
+    }
+
+    ///// Password /////
+    char *password;
+    password = (char *)Pass_Word.toStdString().c_str();
+    rc = ssh_userauth_password(my_ssh_session, NULL, password);
+    if (rc != SSH_AUTH_SUCCESS)
+    {
+      fprintf(stderr, "Error authenticating with password: %s\n",
+              ssh_get_error(my_ssh_session));
+      ssh_disconnect(my_ssh_session);
+      ssh_free(my_ssh_session);
+      exit(-1);
+    }
+
+    ///// Make Channel /////
+    channel = ssh_channel_new(my_ssh_session);
+    rc = ssh_channel_open_session(channel);
+
+    ///// Request_exec /////
+    rc = ssh_channel_request_exec(channel, "cd release; sudo ./TCP_test_GUI 0 0 3 45");
+    if (rc != SSH_OK)
+    {
+      ssh_channel_close(channel);
+      ssh_channel_free(channel);
+    }
+    ui->ConnectionState->setText("Connect");
+
+}
+
+void plotNetworkData::on_disconnectButton_clicked()
+{
+    OnOffSignal = 0; // Off
+
+    ssh_channel_send_eof(channel);
+    ssh_channel_close(channel);
+    ssh_channel_free(channel);
+
+    ssh_disconnect(my_ssh_session);
+    ssh_free(my_ssh_session);
+
+    ui->ConnectionState->setText("Disconnect");
 }
 
 void plotNetworkData::on_ControllerComboBox_currentIndexChanged(const QString &arg1)
@@ -135,4 +205,14 @@ void plotNetworkData::on_ControllerComboBox_currentIndexChanged(const QString &a
     } else if (arg1 == "FirmWare Contoller") {
         ui->stackedWidget->setCurrentIndex(5);
     }
+}
+
+void plotNetworkData::on_runButton_clicked()
+{
+    OnOffSignal = 1; // On
+    RunSignal   = 1; // Run
+}
+void plotNetworkData::on_stopButton_clicked()
+{
+    RunSignal = 0; // Stop
 }
