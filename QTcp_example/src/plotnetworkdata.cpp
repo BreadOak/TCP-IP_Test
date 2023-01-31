@@ -32,7 +32,6 @@ plotNetworkData::plotNetworkData(QWidget *parent)
     ui->lineStyleComboBox->setCurrentIndex(0);
     ui->stackedWidget->setCurrentIndex(0);
 //    ui->Act_value->setText(QHostAddress::Any.toString());
-//    ui->portLineEdit->setText("8000");
     ui->Tar_value->setText("0");
     QValidator *validator = new QDoubleValidator(this);
     ui->Tar_value->setValidator(validator);
