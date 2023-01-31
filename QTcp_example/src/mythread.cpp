@@ -67,14 +67,15 @@ void MyThread::readyRead()
     sVec[1] = double(CtrlMode);   // 0: Position, 1: Velocity, 2: Torque
     sVec[2] = double(Controller); // 0: PID/PD/FW, 1: None/PD+DOB/None, 2: None/MPC/None, 3: None/MPC+DOB/None
     sVec[3] = TargetValue;
-    sVec[4] = double(RunSignal);
-    sVec[5] = double(OnOffSignal);
+    sVec[4] = double(RunSignal);   // 0: Stop, 1: Run
+    sVec[5] = double(OnOffSignal); // 0: Off, 1: On
     sVec[6] = 7.7;
     sVec[7] = 8.8;
     sVec[8] = 9.9;
     sVec[9] = 10.10;
 
-    qDebug() << socketDescriptor << "data:" <<  sVec[4];
+    qDebug() << socketDescriptor << "data:" <<  sVec[1];
+    qDebug() << socketDescriptor << "data:" <<  sVec[3];
 
     // Double Array to QByteArray
     QByteArray sData;

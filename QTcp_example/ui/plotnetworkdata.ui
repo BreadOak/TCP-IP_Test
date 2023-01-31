@@ -46,12 +46,12 @@
       </property>
       <item>
        <property name="text">
-        <string>Pos_data Plot [rad]</string>
+        <string>Pos_data Plot [deg]</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>Vel_data Plot [rad/s]</string>
+        <string>Vel_data Plot [deg/s]</string>
        </property>
       </item>
       <item>

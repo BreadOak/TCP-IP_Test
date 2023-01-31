@@ -33,6 +33,7 @@ plotNetworkData::plotNetworkData(QWidget *parent)
     ui->stackedWidget->setCurrentIndex(0);
 //    ui->Act_value->setText(QHostAddress::Any.toString());
 //    ui->portLineEdit->setText("8000");
+    ui->Tar_value->setText("0");
     QValidator *validator = new QDoubleValidator(this);
     ui->Tar_value->setValidator(validator);
     ui->StepIP->setInputMask("000.000.000.000");
@@ -178,16 +179,20 @@ void plotNetworkData::on_connectButton_clicked()
 
 void plotNetworkData::on_disconnectButton_clicked()
 {
-    OnOffSignal = 0; // Off
+    if(ui->ConnectionState->text() == "Connect")
+    {
+        RunSignal = 0;   // Stop
+        OnOffSignal = 0; // Off
 
-    ssh_channel_send_eof(channel);
-    ssh_channel_close(channel);
-    ssh_channel_free(channel);
+        ssh_channel_send_eof(channel);
+        ssh_channel_close(channel);
+        ssh_channel_free(channel);
 
-    ssh_disconnect(my_ssh_session);
-    ssh_free(my_ssh_session);
+        ssh_disconnect(my_ssh_session);
+        ssh_free(my_ssh_session);
 
-    ui->ConnectionState->setText("Disconnect");
+        ui->ConnectionState->setText("Disconnect");
+    }
 }
 
 void plotNetworkData::on_ControllerComboBox_currentIndexChanged(const QString &arg1)
@@ -209,7 +214,8 @@ void plotNetworkData::on_ControllerComboBox_currentIndexChanged(const QString &a
 
 void plotNetworkData::on_runButton_clicked()
 {
-    OnOffSignal = 1; // On
+//    OnOffSignal = 1; // On
+    TargetValue = ui->Tar_value->text().toDouble();
     RunSignal   = 1; // Run
 }
 void plotNetworkData::on_stopButton_clicked()
