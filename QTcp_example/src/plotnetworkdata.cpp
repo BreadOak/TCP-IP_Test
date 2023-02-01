@@ -8,6 +8,12 @@ extern int CtrlMode;       // Ctrl mode Global variable
 extern int Controller;     // Controller Global variable
 extern double TargetValue; // TargetValue Global variable
 
+extern double Kp_PosCtrl;
+extern double Ki_PosCtrl;
+extern double Kd_PosCtrl;
+extern double Kp_VelCtrl;
+extern double Ki_VelCtrl;
+
 ssh_session my_ssh_session;
 ssh_channel channel;
 int rc;
@@ -32,10 +38,25 @@ plotNetworkData::plotNetworkData(QWidget *parent)
     ui->lineStyleComboBox->setCurrentIndex(0);
     ui->stackedWidget->setCurrentIndex(0);
 //    ui->Act_value->setText(QHostAddress::Any.toString());
+//    ui->portLineEdit->setText("8000");
     ui->Tar_value->setText("0");
     QValidator *validator = new QDoubleValidator(this);
     ui->Tar_value->setValidator(validator);
     ui->StepIP->setInputMask("000.000.000.000");
+
+
+    // Initial Gain setting
+    ui->Kp_pos->setMaximum(10000);
+    ui->Ki_pos->setMaximum(10000);
+    ui->Kd_pos->setMaximum(10000);
+    ui->Kp_pos->setValue(1000.0);
+    ui->Ki_pos->setValue(10.0);
+    ui->Kd_pos->setValue(10.0);
+
+    ui->Kp_vel->setMaximum(10000);
+    ui->Ki_vel->setMaximum(10000);
+    ui->Kp_vel->setValue(300.0);
+    ui->Ki_vel->setValue(200.0);
 
     RunSignal = 0;
 
@@ -121,6 +142,11 @@ void plotNetworkData::on_clearButton_clicked()
 void plotNetworkData::on_setButton_clicked()
 {
     TargetValue = ui->Tar_value->text().toDouble();
+    Kp_PosCtrl = ui->Kp_pos->text().toDouble();
+    Ki_PosCtrl = ui->Ki_pos->text().toDouble();
+    Kd_PosCtrl = ui->Kd_pos->text().toDouble();
+    Kp_VelCtrl = ui->Kp_vel->text().toDouble();
+    Ki_VelCtrl = ui->Ki_vel->text().toDouble();
 }
 
 void plotNetworkData::on_connectButton_clicked()
@@ -215,6 +241,11 @@ void plotNetworkData::on_runButton_clicked()
 {
 //    OnOffSignal = 1; // On
     TargetValue = ui->Tar_value->text().toDouble();
+    Kp_PosCtrl = ui->Kp_pos->text().toDouble();
+    Ki_PosCtrl = ui->Ki_pos->text().toDouble();
+    Kd_PosCtrl = ui->Kd_pos->text().toDouble();
+    Kp_VelCtrl = ui->Kp_vel->text().toDouble();
+    Ki_VelCtrl = ui->Ki_vel->text().toDouble();
     RunSignal   = 1; // Run
 }
 void plotNetworkData::on_stopButton_clicked()

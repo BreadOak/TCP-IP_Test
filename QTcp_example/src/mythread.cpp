@@ -9,6 +9,12 @@ int CtrlMode;   // Ctrl mode Global variable
 int Controller; // Controller Global variable
 double TargetValue;
 
+double Kp_PosCtrl;
+double Ki_PosCtrl;
+double Kd_PosCtrl;
+double Kp_VelCtrl;
+double Ki_VelCtrl;
+
 QTextStream out(stdout);
 
 MyThread::MyThread(qintptr ID, QObject *parent) :
@@ -20,7 +26,7 @@ MyThread::MyThread(qintptr ID, QObject *parent) :
 void MyThread::run()
 {
     // thread starts here
-    qDebug() << " Thread started";
+    qDebug() << "Thread started";
 
     socket = new QTcpSocket();
 
@@ -40,7 +46,7 @@ void MyThread::run()
     connect(socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
 
     // We'll have multiple clients, we want to know which is which
-    qDebug() << socketDescriptor << " Client connected";
+    qDebug() << socketDescriptor << "Client connected";
 
     // make this thread a loop,
     // thread will stay alive so that signal/slot to function properly
@@ -61,7 +67,7 @@ void MyThread::readyRead()
 
     ///// Write /////
     // Data send vector
-    double sVec[10];
+    double sVec[15];
 
     sVec[0] = double(PlotType);   // 0: Position, 1: Velocity, 2: Torque
     sVec[1] = double(CtrlMode);   // 0: Position, 1: Velocity, 2: Torque
@@ -69,13 +75,27 @@ void MyThread::readyRead()
     sVec[3] = TargetValue;
     sVec[4] = double(RunSignal);   // 0: Stop, 1: Run
     sVec[5] = double(OnOffSignal); // 0: Off, 1: On
-    sVec[6] = 7.7;
-    sVec[7] = 8.8;
-    sVec[8] = 9.9;
-    sVec[9] = 10.10;
+    sVec[6] = Kp_PosCtrl;
+    sVec[7] = Ki_PosCtrl;
+    sVec[8] = Kd_PosCtrl;
+    sVec[9] = Kp_VelCtrl;
+    sVec[10] = Ki_VelCtrl;
+    sVec[11] = 0.0;
+    sVec[12] = 0.0;
+    sVec[13] = 0.0;
+    sVec[14] = 0.0;
 
-    qDebug() << socketDescriptor << "data:" <<  sVec[1];
-    qDebug() << socketDescriptor << "data:" <<  sVec[3];
+    qDebug() << socketDescriptor << "PlotType:"    <<  sVec[0];
+    qDebug() << socketDescriptor << "CtrlMode:"    <<  sVec[1];
+    qDebug() << socketDescriptor << "Controller:"  <<  sVec[2];
+    qDebug() << socketDescriptor << "TargetValue:" <<  sVec[3];
+    qDebug() << socketDescriptor << "RunSignal:"   <<  sVec[4];
+    qDebug() << socketDescriptor << "OnOffSignal:" <<  sVec[5];
+    qDebug() << socketDescriptor << "Kp_PosCtrl:"  <<  sVec[6];
+    qDebug() << socketDescriptor << "Ki_PosCtrl:"  <<  sVec[7];
+    qDebug() << socketDescriptor << "Kd_PosCtrl:"  <<  sVec[8];
+    qDebug() << socketDescriptor << "Kp_VelCtrl:"  <<  sVec[9];
+    qDebug() << socketDescriptor << "Ki_VelCtrl:"  <<  sVec[10];
 
     // Double Array to QByteArray
     QByteArray sData;
@@ -90,7 +110,7 @@ void MyThread::readyRead()
 
 void MyThread::disconnected()
 {
-    qDebug() << socketDescriptor << " Disconnected";
+    qDebug() << socketDescriptor << "Disconnected";
 
     socket->deleteLater();
     exit(0);
