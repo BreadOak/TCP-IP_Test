@@ -7,6 +7,7 @@
 #include "mythread.h"
 #include "myserver.h"
 #include "serverthread.h"
+#include "string"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class plotNetworkData; }
@@ -40,6 +41,8 @@ private slots:
     void on_runButton_clicked();
 
     void on_stopButton_clicked();
+
+    void on_saveButton_clicked();
 
 private:
     Ui::plotNetworkData *ui;

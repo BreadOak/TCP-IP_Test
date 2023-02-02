@@ -7,7 +7,6 @@ extern int PlotType;       // Plot type Global variable
 extern int CtrlMode;       // Ctrl mode Global variable
 extern int Controller;     // Controller Global variable
 extern double TargetValue; // TargetValue Global variable
-
 extern double Kp_PosCtrl;
 extern double Ki_PosCtrl;
 extern double Kd_PosCtrl;
@@ -17,6 +16,9 @@ extern double Ki_VelCtrl;
 ssh_session my_ssh_session;
 ssh_channel channel;
 int rc;
+
+QString HOST;
+QString PORT;
 
 plotNetworkData::plotNetworkData(QWidget *parent)
     : QMainWindow(parent)
@@ -37,13 +39,11 @@ plotNetworkData::plotNetworkData(QWidget *parent)
     ui->plotTypeComboBox->setCurrentIndex(0);
     ui->lineStyleComboBox->setCurrentIndex(0);
     ui->stackedWidget->setCurrentIndex(0);
-//    ui->Act_value->setText(QHostAddress::Any.toString());
-//    ui->portLineEdit->setText("8000");
     ui->Tar_value->setText("0");
     QValidator *validator = new QDoubleValidator(this);
     ui->Tar_value->setValidator(validator);
-    ui->StepIP->setInputMask("000.000.000.000");
-
+    ui->IPAddLabel->setText("192.168.0.6");
+    ui->PortLabel->setText("8000");
 
     // Initial Gain setting
     ui->Kp_pos->setMaximum(10000);
@@ -80,7 +80,7 @@ void plotNetworkData::plotNewValues(QVector<double> x, QVector<double> y)
         ui->customPlot->rescaleAxes();
         ui->customPlot->replot();
         ui->customPlot->update();
-        ui->Act_value->setText("0");
+        ui->Act_value->setText("123.4");
     }
 }
 
@@ -100,7 +100,7 @@ void plotNetworkData::on_plotTypeComboBox_currentIndexChanged(int index)
                 break;
         case 1:
                 ui->ControllerComboBox->clear();
-                ui->ControllerComboBox->addItems({"PI","PI+DOB","MPC","MPC+DOB"});
+                ui->ControllerComboBox->addItems({"PI","MPC","H-inf"});
                 break;
         case 2:
                 ui->ControllerComboBox->clear();
@@ -168,10 +168,7 @@ void plotNetworkData::on_connectButton_clicked()
     rc = ssh_connect(my_ssh_session);
     if (rc != SSH_OK)
     {
-      fprintf(stderr, "Error connecting to localhost: %s\n",
-              ssh_get_error(my_ssh_session));
-      ssh_free(my_ssh_session);
-      exit(-1);
+        ui->ConnectionState->setText("Disconnect");
     }
 
     ///// Password /////
@@ -180,11 +177,7 @@ void plotNetworkData::on_connectButton_clicked()
     rc = ssh_userauth_password(my_ssh_session, NULL, password);
     if (rc != SSH_AUTH_SUCCESS)
     {
-      fprintf(stderr, "Error authenticating with password: %s\n",
-              ssh_get_error(my_ssh_session));
-      ssh_disconnect(my_ssh_session);
-      ssh_free(my_ssh_session);
-      exit(-1);
+        ui->ConnectionState->setText("Disconnect");
     }
 
     ///// Make Channel /////
@@ -192,14 +185,17 @@ void plotNetworkData::on_connectButton_clicked()
     rc = ssh_channel_open_session(channel);
 
     ///// Request_exec /////
-    rc = ssh_channel_request_exec(channel, "cd release; sudo ./TCP_test_GUI 0 0 3 45");
+    QString Empt = " ";
+    QString Command = "cd release; sudo ./TCP_test_GUI 0 0" + Empt + HOST + Empt + PORT;
+
+    rc = ssh_channel_request_exec(channel, Command.toStdString().c_str());
     if (rc != SSH_OK)
     {
-      ssh_channel_close(channel);
-      ssh_channel_free(channel);
+        ui->ConnectionState->setText("Disconnect");
     }
-    ui->ConnectionState->setText("Connect");
-
+    else{
+        ui->ConnectionState->setText("Connect");
+    }
 }
 
 void plotNetworkData::on_disconnectButton_clicked()
@@ -226,14 +222,12 @@ void plotNetworkData::on_ControllerComboBox_currentIndexChanged(const QString &a
         ui->stackedWidget->setCurrentIndex(0);
     } else if (arg1 == "PI") {
         ui->stackedWidget->setCurrentIndex(1);
-    } else if (arg1 == "PI+DOB") {
-        ui->stackedWidget->setCurrentIndex(2);
     } else if (arg1 == "MPC") {
+        ui->stackedWidget->setCurrentIndex(2);
+    } else if (arg1 == "H-inf") {
         ui->stackedWidget->setCurrentIndex(3);
-    } else if (arg1 == "MPC+DOB") {
-        ui->stackedWidget->setCurrentIndex(4);
     } else if (arg1 == "FirmWare Contoller") {
-        ui->stackedWidget->setCurrentIndex(5);
+        ui->stackedWidget->setCurrentIndex(4);
     }
 }
 
@@ -246,9 +240,16 @@ void plotNetworkData::on_runButton_clicked()
     Kd_PosCtrl = ui->Kd_pos->text().toDouble();
     Kp_VelCtrl = ui->Kp_vel->text().toDouble();
     Ki_VelCtrl = ui->Ki_vel->text().toDouble();
-    RunSignal   = 1; // Run
+    RunSignal  = 1; // Run
 }
 void plotNetworkData::on_stopButton_clicked()
 {
     RunSignal = 0; // Stop
+}
+
+void plotNetworkData::on_saveButton_clicked()
+{
+    HOST = ui->IPAddLabel->text();
+    PORT = ui->PortLabel->text();
+    ui->Saved->setText("Saved!");
 }

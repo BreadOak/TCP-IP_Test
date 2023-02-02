@@ -71,7 +71,7 @@ void MyThread::readyRead()
 
     sVec[0] = double(PlotType);   // 0: Position, 1: Velocity, 2: Torque
     sVec[1] = double(CtrlMode);   // 0: Position, 1: Velocity, 2: Torque
-    sVec[2] = double(Controller); // 0: PID/PD/FW, 1: None/PD+DOB/None, 2: None/MPC/None, 3: None/MPC+DOB/None
+    sVec[2] = double(Controller); // 0: PID/PD/FW, 1: None/MPC/None, 2: None/H-inf/None
     sVec[3] = TargetValue;
     sVec[4] = double(RunSignal);   // 0: Stop, 1: Run
     sVec[5] = double(OnOffSignal); // 0: Off, 1: On
