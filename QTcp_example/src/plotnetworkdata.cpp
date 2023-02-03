@@ -47,12 +47,12 @@ plotNetworkData::plotNetworkData(QWidget *parent)
     QValidator *validator = new QDoubleValidator(this);
     ui->Tar_value->setValidator(validator);
 
-    ui->IPAddLabel->setText("192.168.0.6");
+    ui->IPAddLabel->setText("IPAdd");
     ui->PortLabel->setText("8000");
 
-    ui->StepIP->setText("192.168.0.39");
-    ui->UserID->setText("user");
-    ui->Password->setText("nrmk2013");
+    ui->StepIP->setText("StepIP");
+    ui->UserID->setText("UserID");
+    ui->Password->setText("Password");
 
     // Initial Gain setting
     ui->Kp_pos->setMaximum(10000);
