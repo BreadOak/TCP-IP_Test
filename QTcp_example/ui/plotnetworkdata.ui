@@ -82,7 +82,7 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>210</y>
+        <y>220</y>
         <width>1291</width>
         <height>461</height>
        </rect>
@@ -655,7 +655,7 @@
          </rect>
         </property>
         <property name="currentIndex">
-         <number>4</number>
+         <number>2</number>
         </property>
         <widget class="QWidget" name="page">
          <widget class="QLabel" name="PIDpos">
@@ -675,7 +675,7 @@
           <property name="geometry">
            <rect>
             <x>80</x>
-            <y>70</y>
+            <y>60</y>
             <width>81</width>
             <height>31</height>
            </rect>
@@ -685,7 +685,7 @@
           <property name="geometry">
            <rect>
             <x>40</x>
-            <y>70</y>
+            <y>60</y>
             <width>31</width>
             <height>31</height>
            </rect>
@@ -697,8 +697,8 @@
          <widget class="QLabel" name="Kd_PIDpos">
           <property name="geometry">
            <rect>
-            <x>190</x>
-            <y>70</y>
+            <x>340</x>
+            <y>60</y>
             <width>31</width>
             <height>31</height>
            </rect>
@@ -710,8 +710,8 @@
          <widget class="QDoubleSpinBox" name="Kd_pos">
           <property name="geometry">
            <rect>
-            <x>230</x>
-            <y>70</y>
+            <x>380</x>
+            <y>60</y>
             <width>81</width>
             <height>31</height>
            </rect>
@@ -720,8 +720,8 @@
          <widget class="QDoubleSpinBox" name="Ki_pos">
           <property name="geometry">
            <rect>
-            <x>380</x>
-            <y>70</y>
+            <x>230</x>
+            <y>60</y>
             <width>81</width>
             <height>31</height>
            </rect>
@@ -730,8 +730,8 @@
          <widget class="QLabel" name="Ki_PIDpos">
           <property name="geometry">
            <rect>
-            <x>340</x>
-            <y>70</y>
+            <x>190</x>
+            <y>60</y>
             <width>31</width>
             <height>31</height>
            </rect>
@@ -759,7 +759,7 @@
           <property name="geometry">
            <rect>
             <x>90</x>
-            <y>70</y>
+            <y>60</y>
             <width>31</width>
             <height>31</height>
            </rect>
@@ -772,7 +772,7 @@
           <property name="geometry">
            <rect>
             <x>130</x>
-            <y>70</y>
+            <y>60</y>
             <width>81</width>
             <height>31</height>
            </rect>
@@ -782,7 +782,7 @@
           <property name="geometry">
            <rect>
             <x>300</x>
-            <y>70</y>
+            <y>60</y>
             <width>31</width>
             <height>31</height>
            </rect>
@@ -795,10 +795,23 @@
           <property name="geometry">
            <rect>
             <x>340</x>
-            <y>70</y>
+            <y>60</y>
             <width>81</width>
             <height>31</height>
            </rect>
+          </property>
+         </widget>
+         <widget class="QCheckBox" name="DOB_option_PI">
+          <property name="geometry">
+           <rect>
+            <x>380</x>
+            <y>110</y>
+            <width>111</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>DOB option</string>
           </property>
          </widget>
         </widget>
@@ -816,6 +829,19 @@
            <string>Velocity Control [MPC]</string>
           </property>
          </widget>
+         <widget class="QCheckBox" name="DOB_option_MPC">
+          <property name="geometry">
+           <rect>
+            <x>380</x>
+            <y>110</y>
+            <width>111</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>DOB option</string>
+          </property>
+         </widget>
         </widget>
         <widget class="QWidget" name="page_5">
          <widget class="QLabel" name="MPCDOBvel">
@@ -831,19 +857,32 @@
            <string>Velocity Control [H-inf]</string>
           </property>
          </widget>
+         <widget class="QCheckBox" name="DOB_option_Hinf">
+          <property name="geometry">
+           <rect>
+            <x>380</x>
+            <y>110</y>
+            <width>111</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>DOB option</string>
+          </property>
+         </widget>
         </widget>
         <widget class="QWidget" name="page_6">
          <widget class="QLabel" name="label_6">
           <property name="geometry">
            <rect>
-            <x>10</x>
-            <y>10</y>
-            <width>81</width>
-            <height>17</height>
+            <x>0</x>
+            <y>0</y>
+            <width>141</width>
+            <height>31</height>
            </rect>
           </property>
           <property name="text">
-           <string>F/W</string>
+           <string>FirmWare Controller</string>
           </property>
          </widget>
         </widget>

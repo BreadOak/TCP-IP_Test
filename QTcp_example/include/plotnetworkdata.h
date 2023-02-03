@@ -44,6 +44,8 @@ private slots:
 
     void on_saveButton_clicked();
 
+    void on_DOB_option_PI_stateChanged(int arg1);
+
 private:
     Ui::plotNetworkData *ui;
 

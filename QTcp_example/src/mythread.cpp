@@ -15,6 +15,8 @@ double Kd_PosCtrl;
 double Kp_VelCtrl;
 double Ki_VelCtrl;
 
+int DOB_option;
+
 QTextStream out(stdout);
 
 MyThread::MyThread(qintptr ID, QObject *parent) :
@@ -62,25 +64,24 @@ void MyThread::readyRead()
     QByteArray Data = socket->readAll();
 
     // will write on server side window
-//    qDebug() << socketDescriptor << " Data in: " << Data;
     parseMsg(Data);
 
     ///// Write /////
     // Data send vector
     double sVec[15];
 
-    sVec[0] = double(PlotType);   // 0: Position, 1: Velocity, 2: Torque
-    sVec[1] = double(CtrlMode);   // 0: Position, 1: Velocity, 2: Torque
-    sVec[2] = double(Controller); // 0: PID/PD/FW, 1: None/MPC/None, 2: None/H-inf/None
-    sVec[3] = TargetValue;
-    sVec[4] = double(RunSignal);   // 0: Stop, 1: Run
-    sVec[5] = double(OnOffSignal); // 0: Off, 1: On
-    sVec[6] = Kp_PosCtrl;
-    sVec[7] = Ki_PosCtrl;
-    sVec[8] = Kd_PosCtrl;
-    sVec[9] = Kp_VelCtrl;
+    sVec[0]  = double(PlotType);   // 0: Position, 1: Velocity, 2: Torque
+    sVec[1]  = double(CtrlMode);   // 0: Position, 1: Velocity, 2: Torque
+    sVec[2]  = double(Controller); // 0: PID/PD/FW, 1: None/MPC/None, 2: None/H-inf/None
+    sVec[3]  = TargetValue;
+    sVec[4]  = double(RunSignal);   // 0: Stop, 1: Run
+    sVec[5]  = double(OnOffSignal); // 0: Off, 1: On
+    sVec[6]  = Kp_PosCtrl;
+    sVec[7]  = Ki_PosCtrl;
+    sVec[8]  = Kd_PosCtrl;
+    sVec[9]  = Kp_VelCtrl;
     sVec[10] = Ki_VelCtrl;
-    sVec[11] = 0.0;
+    sVec[11] = double(DOB_option); // 0: Off, 1: On
     sVec[12] = 0.0;
     sVec[13] = 0.0;
     sVec[14] = 0.0;
@@ -103,9 +104,6 @@ void MyThread::readyRead()
 
     // Write Data to client
     socket->write(sData);
-
-    // will write on server side window
-//    qDebug() << socketDescriptor << " Data in: " << sData;
 }
 
 void MyThread::disconnected()

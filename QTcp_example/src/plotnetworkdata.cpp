@@ -12,13 +12,17 @@ extern double Ki_PosCtrl;
 extern double Kd_PosCtrl;
 extern double Kp_VelCtrl;
 extern double Ki_VelCtrl;
+extern int DOB_option;
 
 ssh_session my_ssh_session;
 ssh_channel channel;
-int rc;
 
 QString HOST;
 QString PORT;
+
+int rc;
+int MaxVel = 150;
+int MaxTor = 10;
 
 plotNetworkData::plotNetworkData(QWidget *parent)
     : QMainWindow(parent)
@@ -42,8 +46,13 @@ plotNetworkData::plotNetworkData(QWidget *parent)
     ui->Tar_value->setText("0");
     QValidator *validator = new QDoubleValidator(this);
     ui->Tar_value->setValidator(validator);
+
     ui->IPAddLabel->setText("192.168.0.6");
     ui->PortLabel->setText("8000");
+
+    ui->StepIP->setText("192.168.0.39");
+    ui->UserID->setText("user");
+    ui->Password->setText("nrmk2013");
 
     // Initial Gain setting
     ui->Kp_pos->setMaximum(10000);
@@ -57,7 +66,6 @@ plotNetworkData::plotNetworkData(QWidget *parent)
     ui->Ki_vel->setMaximum(10000);
     ui->Kp_vel->setValue(300.0);
     ui->Ki_vel->setValue(200.0);
-
     RunSignal = 0;
 
 //    MyThread m;
@@ -109,6 +117,29 @@ void plotNetworkData::on_plotTypeComboBox_currentIndexChanged(int index)
     }
 
     CtrlMode = index;
+
+    // Limit the TargetValue
+    if (CtrlMode==1){
+        if(TargetValue > MaxVel){
+            TargetValue = MaxVel;
+            ui->Tar_value->setText(QString::number(MaxVel));
+        }
+        if(TargetValue < -MaxVel){
+            TargetValue = -MaxVel;
+            ui->Tar_value->setText(QString::number(-MaxVel));
+        }
+    }
+    if (CtrlMode==2){
+        if(TargetValue > MaxTor){
+            TargetValue = MaxTor;
+            ui->Tar_value->setText(QString::number(MaxTor));
+        }
+        if(TargetValue < -MaxTor){
+            TargetValue = -MaxTor;
+            ui->Tar_value->setText(QString::number(-MaxTor));
+        }
+    }
+
     ui->customPlot->replot();
     ui->customPlot->update();
 }
@@ -142,11 +173,43 @@ void plotNetworkData::on_clearButton_clicked()
 void plotNetworkData::on_setButton_clicked()
 {
     TargetValue = ui->Tar_value->text().toDouble();
+
+    // Limit the TargetValue
+    if (CtrlMode==1){
+        if(TargetValue > MaxVel){
+            TargetValue = MaxVel;
+            ui->Tar_value->setText(QString::number(MaxVel));
+        }
+        if(TargetValue < -MaxVel){
+            TargetValue = -MaxVel;
+            ui->Tar_value->setText(QString::number(-MaxVel));
+        }
+    }
+    if (CtrlMode==2){
+        if(TargetValue > MaxTor){
+            TargetValue = MaxTor;
+            ui->Tar_value->setText(QString::number(MaxTor));
+        }
+        if(TargetValue < -MaxTor){
+            TargetValue = -MaxTor;
+            ui->Tar_value->setText(QString::number(-MaxTor));
+        }
+    }
+
     Kp_PosCtrl = ui->Kp_pos->text().toDouble();
     Ki_PosCtrl = ui->Ki_pos->text().toDouble();
     Kd_PosCtrl = ui->Kd_pos->text().toDouble();
     Kp_VelCtrl = ui->Kp_vel->text().toDouble();
     Ki_VelCtrl = ui->Ki_vel->text().toDouble();
+
+    if( (ui->DOB_option_PI->isChecked() && Controller == 0) || (ui->DOB_option_MPC->isChecked() && Controller == 1) || (ui->DOB_option_Hinf->isChecked() && Controller == 2) )
+    {
+        DOB_option = 1;
+    }
+    else{
+        DOB_option = 0;
+    }
+    qDebug()  << "DOB_option:"<< DOB_option;
 }
 
 void plotNetworkData::on_connectButton_clicked()
@@ -196,6 +259,7 @@ void plotNetworkData::on_connectButton_clicked()
     else{
         ui->ConnectionState->setText("Connect");
     }
+
 }
 
 void plotNetworkData::on_disconnectButton_clicked()
@@ -235,11 +299,43 @@ void plotNetworkData::on_runButton_clicked()
 {
 //    OnOffSignal = 1; // On
     TargetValue = ui->Tar_value->text().toDouble();
+
+    // Limit the TargetValue
+    if (CtrlMode==1){
+        if(TargetValue > MaxVel){
+            TargetValue = MaxVel;
+            ui->Tar_value->setText(QString::number(MaxVel));
+        }
+        if(TargetValue < -MaxVel){
+            TargetValue = -MaxVel;
+            ui->Tar_value->setText(QString::number(-MaxVel));
+        }
+    }
+    if (CtrlMode==2){
+        if(TargetValue > MaxTor){
+            TargetValue = MaxTor;
+            ui->Tar_value->setText(QString::number(MaxTor));
+        }
+        if(TargetValue < -MaxTor){
+            TargetValue = -MaxTor;
+            ui->Tar_value->setText(QString::number(-MaxTor));
+        }
+    }
+
     Kp_PosCtrl = ui->Kp_pos->text().toDouble();
     Ki_PosCtrl = ui->Ki_pos->text().toDouble();
     Kd_PosCtrl = ui->Kd_pos->text().toDouble();
     Kp_VelCtrl = ui->Kp_vel->text().toDouble();
     Ki_VelCtrl = ui->Ki_vel->text().toDouble();
+
+    if( (ui->DOB_option_PI->isChecked() && Controller == 0) || (ui->DOB_option_MPC->isChecked() && Controller == 1) || (ui->DOB_option_Hinf->isChecked() && Controller == 2) )
+    {
+        DOB_option = 1;
+    }
+    else{
+        DOB_option = 0;
+    }
+
     RunSignal  = 1; // Run
 }
 void plotNetworkData::on_stopButton_clicked()
@@ -252,4 +348,9 @@ void plotNetworkData::on_saveButton_clicked()
     HOST = ui->IPAddLabel->text();
     PORT = ui->PortLabel->text();
     ui->Saved->setText("Saved!");
+}
+
+void plotNetworkData::on_DOB_option_PI_stateChanged(int arg1)
+{
+
 }
