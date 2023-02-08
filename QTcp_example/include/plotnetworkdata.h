@@ -2,7 +2,23 @@
 #define PLOTNETWORKDATA_H
 
 #include <QMainWindow>
+#include <QtCore/QFile>
+#include <QtCore/QStringList>
+
+#include <fstream>
+#include <iostream>
+#include <string.h>
+#include <fstream>
+#include <vector>
+#include <sstream>
+#include <typeinfo>
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <fftw3.h>
+#include <complex.h>
 #include <libssh/libssh.h>
+
 #include "qcustomplot.h"
 #include "mythread.h"
 #include "myserver.h"
@@ -45,6 +61,10 @@ private slots:
     void on_saveButton_clicked();
 
     void on_DOB_option_PI_stateChanged(int arg1);
+
+    void on_plotButton_clicked();
+
+    void on_clearButton_2_clicked();
 
 private:
     Ui::plotNetworkData *ui;

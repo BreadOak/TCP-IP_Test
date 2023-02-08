@@ -18,13 +18,13 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>10</y>
+      <y>20</y>
       <width>1301</width>
       <height>701</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="Control_tab">
      <attribute name="title">
@@ -907,6 +907,442 @@
      <attribute name="title">
       <string>Bode Plot</string>
      </attribute>
+     <widget class="QCustomPlot" name="MagPlot" native="true">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>150</y>
+        <width>1291</width>
+        <height>261</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QTabWidget" name="tabWidget_3">
+      <property name="geometry">
+       <rect>
+        <x>750</x>
+        <y>10</y>
+        <width>521</width>
+        <height>131</height>
+       </rect>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="Gain_2">
+       <attribute name="title">
+        <string>Gain</string>
+       </attribute>
+       <widget class="QStackedWidget" name="stackedWidget_2">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>491</width>
+          <height>111</height>
+         </rect>
+        </property>
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
+        <widget class="QWidget" name="page_4">
+         <widget class="QLabel" name="PIDpos_2">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>161</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Position Control [PID]</string>
+          </property>
+         </widget>
+         <widget class="QDoubleSpinBox" name="Kp_pos_2">
+          <property name="geometry">
+           <rect>
+            <x>80</x>
+            <y>40</y>
+            <width>81</width>
+            <height>31</height>
+           </rect>
+          </property>
+         </widget>
+         <widget class="QLabel" name="Kp_PIDpos_2">
+          <property name="geometry">
+           <rect>
+            <x>40</x>
+            <y>40</y>
+            <width>31</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Kp :</string>
+          </property>
+         </widget>
+         <widget class="QLabel" name="Kd_PIDpos_2">
+          <property name="geometry">
+           <rect>
+            <x>340</x>
+            <y>40</y>
+            <width>31</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Kd :</string>
+          </property>
+         </widget>
+         <widget class="QDoubleSpinBox" name="Kd_pos_2">
+          <property name="geometry">
+           <rect>
+            <x>380</x>
+            <y>40</y>
+            <width>81</width>
+            <height>31</height>
+           </rect>
+          </property>
+         </widget>
+         <widget class="QDoubleSpinBox" name="Ki_pos_2">
+          <property name="geometry">
+           <rect>
+            <x>230</x>
+            <y>40</y>
+            <width>81</width>
+            <height>31</height>
+           </rect>
+          </property>
+         </widget>
+         <widget class="QLabel" name="Ki_PIDpos_2">
+          <property name="geometry">
+           <rect>
+            <x>190</x>
+            <y>40</y>
+            <width>31</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Ki :</string>
+          </property>
+         </widget>
+        </widget>
+        <widget class="QWidget" name="page_7">
+         <widget class="QLabel" name="PIvel_2">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>161</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Velocity Control [PI]</string>
+          </property>
+         </widget>
+         <widget class="QLabel" name="Kp_PIvel_2">
+          <property name="geometry">
+           <rect>
+            <x>90</x>
+            <y>40</y>
+            <width>31</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Kp :</string>
+          </property>
+         </widget>
+         <widget class="QDoubleSpinBox" name="Kp_vel_2">
+          <property name="geometry">
+           <rect>
+            <x>130</x>
+            <y>40</y>
+            <width>81</width>
+            <height>31</height>
+           </rect>
+          </property>
+         </widget>
+         <widget class="QLabel" name="Ki_PIvel_2">
+          <property name="geometry">
+           <rect>
+            <x>300</x>
+            <y>40</y>
+            <width>31</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Ki :</string>
+          </property>
+         </widget>
+         <widget class="QDoubleSpinBox" name="Ki_vel_2">
+          <property name="geometry">
+           <rect>
+            <x>340</x>
+            <y>40</y>
+            <width>81</width>
+            <height>31</height>
+           </rect>
+          </property>
+         </widget>
+         <widget class="QCheckBox" name="DOB_option_PI_2">
+          <property name="geometry">
+           <rect>
+            <x>380</x>
+            <y>110</y>
+            <width>111</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>DOB option</string>
+          </property>
+         </widget>
+        </widget>
+        <widget class="QWidget" name="page_8">
+         <widget class="QLabel" name="MPCvel_2">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>171</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Velocity Control [MPC]</string>
+          </property>
+         </widget>
+         <widget class="QCheckBox" name="DOB_option_MPC_2">
+          <property name="geometry">
+           <rect>
+            <x>380</x>
+            <y>110</y>
+            <width>111</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>DOB option</string>
+          </property>
+         </widget>
+        </widget>
+        <widget class="QWidget" name="page_9">
+         <widget class="QLabel" name="MPCDOBvel_2">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>221</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Velocity Control [H-inf]</string>
+          </property>
+         </widget>
+         <widget class="QCheckBox" name="DOB_option_Hinf_2">
+          <property name="geometry">
+           <rect>
+            <x>380</x>
+            <y>110</y>
+            <width>111</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>DOB option</string>
+          </property>
+         </widget>
+        </widget>
+        <widget class="QWidget" name="page_10">
+         <widget class="QLabel" name="label_7">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>141</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>FirmWare Controller</string>
+          </property>
+         </widget>
+        </widget>
+       </widget>
+      </widget>
+     </widget>
+     <widget class="QComboBox" name="plotTypeComboBox_2">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>41</y>
+        <width>211</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="currentText">
+       <string>Position Control</string>
+      </property>
+      <item>
+       <property name="text">
+        <string>Position Control</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Velocity Control</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Torque Control</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QLabel" name="CrtlMode_2">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>20</y>
+        <width>91</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Control Mode</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="Controller_2">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>80</y>
+        <width>91</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Controller</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="ControllerComboBox_2">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>101</y>
+        <width>211</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="currentText">
+       <string>PID</string>
+      </property>
+      <item>
+       <property name="text">
+        <string>PID</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QPushButton" name="clearButton_2">
+      <property name="geometry">
+       <rect>
+        <x>550</x>
+        <y>100</y>
+        <width>151</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Clear Data</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="plotButton">
+      <property name="geometry">
+       <rect>
+        <x>550</x>
+        <y>60</y>
+        <width>151</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Plot</string>
+      </property>
+     </widget>
+     <widget class="QListWidget" name="listWidget">
+      <property name="geometry">
+       <rect>
+        <x>260</x>
+        <y>20</y>
+        <width>256</width>
+        <height>121</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="runButton_2">
+      <property name="geometry">
+       <rect>
+        <x>550</x>
+        <y>20</y>
+        <width>151</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Run</string>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="PhasePlot" native="true">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>410</y>
+        <width>1291</width>
+        <height>261</height>
+       </rect>
+      </property>
+     </widget>
     </widget>
    </widget>
   </widget>

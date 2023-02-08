@@ -12,7 +12,6 @@ class MyThread : public QThread
 public:
     explicit MyThread(qintptr ID, QObject *parent = 0);
 
-
     void run();
 
 signals:
