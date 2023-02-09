@@ -154,7 +154,7 @@
        </font>
       </property>
       <property name="text">
-       <string>Clear Data</string>
+       <string>Clear</string>
       </property>
      </widget>
      <widget class="QComboBox" name="ControllerComboBox">
@@ -1284,7 +1284,7 @@
        </font>
       </property>
       <property name="text">
-       <string>Clear Data</string>
+       <string>Clear</string>
       </property>
      </widget>
      <widget class="QPushButton" name="plotButton">
@@ -1303,16 +1303,6 @@
       </property>
       <property name="text">
        <string>Plot</string>
-      </property>
-     </widget>
-     <widget class="QListWidget" name="listWidget">
-      <property name="geometry">
-       <rect>
-        <x>260</x>
-        <y>20</y>
-        <width>256</width>
-        <height>121</height>
-       </rect>
       </property>
      </widget>
      <widget class="QPushButton" name="runButton_2">
@@ -1340,6 +1330,16 @@
         <y>410</y>
         <width>1291</width>
         <height>261</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="State_2">
+      <property name="geometry">
+       <rect>
+        <x>260</x>
+        <y>20</y>
+        <width>251</width>
+        <height>121</height>
        </rect>
       </property>
      </widget>

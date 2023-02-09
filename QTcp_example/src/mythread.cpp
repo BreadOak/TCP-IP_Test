@@ -16,6 +16,9 @@ double Kp_VelCtrl;
 double Ki_VelCtrl;
 
 int DOB_option;
+int Mode;
+
+extern double Endtime;
 
 QTextStream out(stdout);
 
@@ -82,7 +85,7 @@ void MyThread::readyRead()
     sVec[9]  = Kp_VelCtrl;
     sVec[10] = Ki_VelCtrl;
     sVec[11] = double(DOB_option); // 0: Off, 1: On
-    sVec[12] = 0.0;
+    sVec[12] = double(Mode);       // 0: Control, 1: Bode Plot
     sVec[13] = 0.0;
     sVec[14] = 0.0;
 
@@ -132,6 +135,8 @@ void MyThread::parseMsg(QByteArray Data)
     }rData;
 
     memcpy((char *)&rData, Data.data(), sizeof(rData));
+
+    Endtime = rData.time[49];
 
     for (int i=0; i<50; ++i)
     {

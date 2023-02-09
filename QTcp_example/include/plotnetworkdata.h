@@ -60,11 +60,19 @@ private slots:
 
     void on_saveButton_clicked();
 
-    void on_DOB_option_PI_stateChanged(int arg1);
-
     void on_plotButton_clicked();
 
     void on_clearButton_2_clicked();
+
+    void on_tabWidget_currentChanged(int index);
+
+    void on_plotTypeComboBox_2_currentIndexChanged(int index);
+
+    void on_ControllerComboBox_2_currentIndexChanged(const QString &arg1);
+
+    void on_ControllerComboBox_2_currentIndexChanged(int index);
+
+    void on_runButton_2_clicked();
 
 private:
     Ui::plotNetworkData *ui;
