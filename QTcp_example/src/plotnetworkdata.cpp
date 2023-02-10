@@ -140,7 +140,11 @@ void plotNetworkData::plotNewValues(QVector<double> x, QVector<double> y)
         ui->customPlot->rescaleAxes();
         ui->customPlot->replot();
         ui->customPlot->update();
-        ui->Act_value->setText("123.4");
+        ui->Act_value->setText(QString::number(y.last()));
+    }
+    if ((x.last() > 10) && Mode == 1)
+    {
+        ui->State_2->setText("Finished");
     }
 }
 
@@ -453,9 +457,6 @@ void plotNetworkData::on_runButton_2_clicked()
     Kp_VelCtrl = ui->Kp_vel_2->text().toDouble();
     Ki_VelCtrl = ui->Ki_vel_2->text().toDouble();
 
-    int size, mode;
-    char *filename, *buffer;
-
     QString Step_IP = ui->StepIP->text();
     QString User_ID = ui->UserID->text();
     QString Pass_Word = ui->Password->text();
@@ -497,76 +498,14 @@ void plotNetworkData::on_runButton_2_clicked()
         ui->ConnectionState->setText("Disconnect");
     }
 
-    scp = ssh_scp_new
-      (BP_session, SSH_SCP_READ, "release/CORE200_LoadTest_Data.csv");
-    if (scp == NULL)
-    {
-      fprintf(stderr, "Error allocating scp session: %s\n",
-              ssh_get_error(BP_session));
-    }
-
-    rc = ssh_scp_init(scp);
-    if (rc != SSH_OK)
-    {
-      fprintf(stderr, "Error initializing scp session: %s\n",
-              ssh_get_error(BP_session));
-      ssh_scp_free(scp);
-    }
-
-    rc = ssh_scp_pull_request(scp);
-    if (rc != SSH_SCP_REQUEST_NEWFILE)
-    {
-      fprintf(stderr, "Error receiving information about file: %s\n",
-              ssh_get_error(BP_session));
-    }
-
-    size = ssh_scp_request_get_size(scp);
-    filename = strdup(ssh_scp_request_get_filename(scp));
-    mode = ssh_scp_request_get_permissions(scp);
-    printf("Receiving file %s, size %d, permissions 0%o\n",
-            filename, size, mode);
-    free(filename);
-
-    buffer = (char *)malloc(size);
-    if (buffer == NULL)
-    {
-      fprintf(stderr, "Memory allocation error\n");
-    }
-
-    ssh_scp_accept_request(scp);
-
-    int r = 0;
-
-    while (r < size)
-    {
-        int st = ssh_scp_read(scp, buffer+r, size-r);
-        r += st;
-    }
-
-    FILE*fp = fopen("/home/breadoak/QTcp_example/src/CORE200_LoadTest_Data.csv","w");
-
-    // write(fp, buffer, size);
-    fwrite(buffer, size, 1, fp);
-    free(buffer);
-
-    rc = ssh_scp_pull_request(scp);
-    if (rc != SSH_SCP_REQUEST_EOF)
-    {
-      fprintf(stderr, "Unexpected request: %s\n",
-              ssh_get_error(BP_session));
-    }
-
-    fclose(fp);
-
-    ssh_scp_close(scp);
-    ssh_scp_free(scp);
-
     ssh_channel_send_eof(BPchannel);
     ssh_channel_close(BPchannel);
     ssh_channel_free(BPchannel);
 
     ssh_disconnect(BP_session);
     ssh_free(BP_session);
+
+    ui->State_2->setText("Running...");
 
 }
 
@@ -624,7 +563,11 @@ void plotNetworkData::on_plotButton_clicked()
     string data;
     vector<string> DATA;
 
-    fs.open("/home/breadoak/QTcp_example/src/CORE200_LoadTest_Data.csv",ios::in);
+    QString sModulePath = QCoreApplication::applicationDirPath();
+    qDebug()  << "sModulePath:"<< sModulePath;
+
+    fs.open("CORE200_LoadTest_Data.csv",ios::in);
+//    fs.open("/home/breadoak/QTcp_example/src/CORE200_LoadTest_Data.csv",ios::in);
 
     for (int i = 0; i < L+1; ++i ) // Contain first information index (L+1)
     {
@@ -717,6 +660,11 @@ void plotNetworkData::on_plotButton_clicked()
 
         TF_Mag[n]   = 20*log10(act_Mag/tar_Mag);
         TF_Phase[n] = (act_Phase - tar_Phase)*180.0/PI;
+
+        if (TF_Phase[n] > 90){
+            TF_Phase[n] = -720 + TF_Phase[n];
+        }
+
     }
 
     for (int i=0; i<IndexNum+1; i++)
@@ -759,6 +707,106 @@ void plotNetworkData::on_tabWidget_currentChanged(int index)
     }
 }
 
+void plotNetworkData::on_copyButton_clicked()
+{
+    // Copy .csv from step pc
 
+    QString Step_IP = ui->StepIP->text();
+    QString User_ID = ui->UserID->text();
+    QString Pass_Word = ui->Password->text();
+    int size, mode;
+    char *filename, *buffer;
 
+    ///// Open session and set options /////
+    BP_session = ssh_new();
+    if (BP_session == NULL)
+      exit(-1);
+    ssh_options_set(BP_session, SSH_OPTIONS_HOST, Step_IP.toStdString().c_str());
+    ssh_options_set(BP_session, SSH_OPTIONS_USER, User_ID.toStdString().c_str());
 
+    ///// Connect to server /////
+    rc = ssh_connect(BP_session);
+    if (rc != SSH_OK)
+    {
+        ui->ConnectionState->setText("Disconnect");
+    }
+
+    ///// Password /////
+    char *password;
+    password = (char *)Pass_Word.toStdString().c_str();
+    rc = ssh_userauth_password(BP_session, NULL, password);
+    if (rc != SSH_AUTH_SUCCESS)
+    {
+        ui->ConnectionState->setText("Disconnect");
+    }
+
+    scp = ssh_scp_new
+      (BP_session, SSH_SCP_READ, "release/CORE200_LoadTest_Data.csv");
+    if (scp == NULL)
+    {
+      fprintf(stderr, "Error allocating scp session: %s\n",
+              ssh_get_error(BP_session));
+    }
+
+    rc = ssh_scp_init(scp);
+    if (rc != SSH_OK)
+    {
+      fprintf(stderr, "Error initializing scp session: %s\n",
+              ssh_get_error(BP_session));
+      ssh_scp_free(scp);
+    }
+
+    rc = ssh_scp_pull_request(scp);
+    if (rc != SSH_SCP_REQUEST_NEWFILE)
+    {
+      fprintf(stderr, "Error receiving information about file: %s\n",
+              ssh_get_error(BP_session));
+    }
+
+    size = ssh_scp_request_get_size(scp);
+    filename = strdup(ssh_scp_request_get_filename(scp));
+    mode = ssh_scp_request_get_permissions(scp);
+    printf("Receiving file %s, size %d, permissions 0%o\n",
+            filename, size, mode);
+    free(filename);
+
+    buffer = (char *)malloc(size);
+    if (buffer == NULL)
+    {
+      fprintf(stderr, "Memory allocation error\n");
+    }
+
+    ssh_scp_accept_request(scp);
+
+    int r = 0;
+
+    while (r < size)
+    {
+        int st = ssh_scp_read(scp, buffer+r, size-r);
+        r += st;
+    }
+
+    FILE*fp = fopen("CORE200_LoadTest_Data.csv","w");
+//    FILE*fp = fopen("/home/breadoak/QTcp_example/src/CORE200_LoadTest_Data.csv","w");
+
+    // write(fp, buffer, size);
+    fwrite(buffer, size, 1, fp);
+    free(buffer);
+
+    rc = ssh_scp_pull_request(scp);
+    if (rc != SSH_SCP_REQUEST_EOF)
+    {
+      fprintf(stderr, "Unexpected request: %s\n",
+              ssh_get_error(BP_session));
+    }
+
+    fclose(fp);
+
+    ssh_scp_close(scp);
+    ssh_scp_free(scp);
+
+    ssh_disconnect(BP_session);
+    ssh_free(BP_session);
+
+    ui->State_2->setText("Copy complete!");
+}

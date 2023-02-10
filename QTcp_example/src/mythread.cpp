@@ -89,17 +89,17 @@ void MyThread::readyRead()
     sVec[13] = 0.0;
     sVec[14] = 0.0;
 
-    qDebug() << socketDescriptor << "PlotType:"    <<  sVec[0];
-    qDebug() << socketDescriptor << "CtrlMode:"    <<  sVec[1];
-    qDebug() << socketDescriptor << "Controller:"  <<  sVec[2];
-    qDebug() << socketDescriptor << "TargetValue:" <<  sVec[3];
-    qDebug() << socketDescriptor << "RunSignal:"   <<  sVec[4];
-    qDebug() << socketDescriptor << "OnOffSignal:" <<  sVec[5];
-    qDebug() << socketDescriptor << "Kp_PosCtrl:"  <<  sVec[6];
-    qDebug() << socketDescriptor << "Ki_PosCtrl:"  <<  sVec[7];
-    qDebug() << socketDescriptor << "Kd_PosCtrl:"  <<  sVec[8];
-    qDebug() << socketDescriptor << "Kp_VelCtrl:"  <<  sVec[9];
-    qDebug() << socketDescriptor << "Ki_VelCtrl:"  <<  sVec[10];
+//    qDebug() << socketDescriptor << "PlotType:"    <<  sVec[0];
+//    qDebug() << socketDescriptor << "CtrlMode:"    <<  sVec[1];
+//    qDebug() << socketDescriptor << "Controller:"  <<  sVec[2];
+//    qDebug() << socketDescriptor << "TargetValue:" <<  sVec[3];
+//    qDebug() << socketDescriptor << "RunSignal:"   <<  sVec[4];
+//    qDebug() << socketDescriptor << "OnOffSignal:" <<  sVec[5];
+//    qDebug() << socketDescriptor << "Kp_PosCtrl:"  <<  sVec[6];
+//    qDebug() << socketDescriptor << "Ki_PosCtrl:"  <<  sVec[7];
+//    qDebug() << socketDescriptor << "Kd_PosCtrl:"  <<  sVec[8];
+//    qDebug() << socketDescriptor << "Kp_VelCtrl:"  <<  sVec[9];
+//    qDebug() << socketDescriptor << "Ki_VelCtrl:"  <<  sVec[10];
 
     // Double Array to QByteArray
     QByteArray sData;

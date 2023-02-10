@@ -18,7 +18,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>20</y>
+      <y>10</y>
       <width>1301</width>
       <height>701</height>
      </rect>
@@ -84,7 +84,7 @@
         <x>0</x>
         <y>220</y>
         <width>1291</width>
-        <height>461</height>
+        <height>451</height>
        </rect>
       </property>
      </widget>
@@ -1181,7 +1181,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>41</y>
+        <y>61</y>
         <width>211</width>
         <height>22</height>
        </rect>
@@ -1214,7 +1214,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>20</y>
+        <y>40</y>
         <width>91</width>
         <height>21</height>
        </rect>
@@ -1232,7 +1232,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>80</y>
+        <y>89</y>
         <width>91</width>
         <height>21</height>
        </rect>
@@ -1250,7 +1250,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>101</y>
+        <y>110</y>
         <width>211</width>
         <height>22</height>
        </rect>
@@ -1272,9 +1272,9 @@
      <widget class="QPushButton" name="clearButton_2">
       <property name="geometry">
        <rect>
-        <x>550</x>
+        <x>600</x>
         <y>100</y>
-        <width>151</width>
+        <width>121</width>
         <height>41</height>
        </rect>
       </property>
@@ -1290,9 +1290,9 @@
      <widget class="QPushButton" name="plotButton">
       <property name="geometry">
        <rect>
-        <x>550</x>
+        <x>600</x>
         <y>60</y>
-        <width>151</width>
+        <width>121</width>
         <height>41</height>
        </rect>
       </property>
@@ -1303,24 +1303,6 @@
       </property>
       <property name="text">
        <string>Plot</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="runButton_2">
-      <property name="geometry">
-       <rect>
-        <x>550</x>
-        <y>20</y>
-        <width>151</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Run</string>
       </property>
      </widget>
      <widget class="QCustomPlot" name="PhasePlot" native="true">
@@ -1336,11 +1318,78 @@
      <widget class="QLineEdit" name="State_2">
       <property name="geometry">
        <rect>
-        <x>260</x>
+        <x>270</x>
         <y>20</y>
-        <width>251</width>
-        <height>121</height>
+        <width>311</width>
+        <height>71</height>
        </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="runButton_2">
+      <property name="geometry">
+       <rect>
+        <x>270</x>
+        <y>100</y>
+        <width>151</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Run</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="stopButton_2">
+      <property name="geometry">
+       <rect>
+        <x>430</x>
+        <y>100</y>
+        <width>151</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Stop</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="copyButton">
+      <property name="geometry">
+       <rect>
+        <x>600</x>
+        <y>20</y>
+        <width>121</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Copy</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_2">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>0</y>
+        <width>181</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>[NRMK_CORE_GUI_ver.0]</string>
       </property>
      </widget>
     </widget>

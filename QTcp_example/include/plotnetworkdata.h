@@ -18,6 +18,7 @@
 #include <fftw3.h>
 #include <complex.h>
 #include <libssh/libssh.h>
+#include <unistd.h>
 
 #include "qcustomplot.h"
 #include "mythread.h"
@@ -73,6 +74,8 @@ private slots:
     void on_ControllerComboBox_2_currentIndexChanged(int index);
 
     void on_runButton_2_clicked();
+
+    void on_copyButton_clicked();
 
 private:
     Ui::plotNetworkData *ui;
