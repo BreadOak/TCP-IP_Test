@@ -39,23 +39,26 @@ public:
     ~plotNetworkData();
 
 private slots:
-    void on_plotTypeComboBox_currentIndexChanged(int index);
 
-    void on_lineStyleComboBox_currentIndexChanged(int index);
+    void on_PlotTypeComboBox_currentIndexChanged(int index);
 
     void on_clearButton_clicked();
 
+    void on_clearButton_2_clicked();
+
     void on_ControllerComboBox_currentIndexChanged(int index);
+
+    void on_ControllerComboBox_currentIndexChanged(const QString &arg1);
 
     void on_setButton_clicked();
 
     void on_connectButton_clicked();
 
-    void on_ControllerComboBox_currentIndexChanged(const QString &arg1);
-
     void on_disconnectButton_clicked();
 
     void on_runButton_clicked();
+
+    void on_runButton_2_clicked();
 
     void on_stopButton_clicked();
 
@@ -63,19 +66,21 @@ private slots:
 
     void on_plotButton_clicked();
 
-    void on_clearButton_2_clicked();
-
     void on_tabWidget_currentChanged(int index);
-
-    void on_plotTypeComboBox_2_currentIndexChanged(int index);
-
-    void on_ControllerComboBox_2_currentIndexChanged(const QString &arg1);
 
     void on_ControllerComboBox_2_currentIndexChanged(int index);
 
-    void on_runButton_2_clicked();
+    void on_ControllerComboBox_2_currentIndexChanged(const QString &arg1);
 
     void on_copyButton_clicked();
+
+    void on_CtrlModeComboBox_currentIndexChanged(int index);
+
+    void on_CtrlModeComboBox_2_currentIndexChanged(int index);
+
+    void closeEvent(QCloseEvent *event);
+
+    void on_stopButton_2_clicked();
 
 private:
     Ui::plotNetworkData *ui;
@@ -83,6 +88,7 @@ private:
 public slots:
     void plotNewValues(QVector<double> x,QVector<double> y);
     void clearPlot();
+    void disConnect();
 };
 
 //extern int Type;

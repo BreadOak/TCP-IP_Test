@@ -2,6 +2,7 @@
 
 ServerThread::ServerThread(QObject *parent)
 {
+
 }
 
 void ServerThread::run()

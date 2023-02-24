@@ -6,6 +6,7 @@
 MyServer::MyServer(QObject *parent) :
     QTcpServer(parent)
 {
+
 }
 
 void MyServer::startServer()

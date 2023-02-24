@@ -39,9 +39,7 @@ plotNetworkData::plotNetworkData(QWidget *parent)
     , ui(new Ui::plotNetworkData)
 {
     ui->setupUi(this);
-
     ui->customPlot->addGraph();
-//    ui->customPlot->setBackground(QBrush(QColor(0, 0, 0, 0)));
     ui->customPlot->graph(0)->setScatterStyle(QCPScatterStyle::ssNone);
     ui->customPlot->graph(0)->setLineStyle(QCPGraph::lsLine);
     ui->customPlot->graph(0)->setPen(QPen(Qt::red));
@@ -77,9 +75,9 @@ plotNetworkData::plotNetworkData(QWidget *parent)
     ui->MagPlot->xAxis->setTicker(logTicker);
     ui->PhasePlot->xAxis->setTicker(logTicker);
 
-    ui->plotTypeComboBox->setCurrentIndex(0);
-    ui->plotTypeComboBox_2->setCurrentIndex(0);
-    ui->lineStyleComboBox->setCurrentIndex(0);
+    ui->CtrlModeComboBox->setCurrentIndex(0);
+    ui->CtrlModeComboBox_2->setCurrentIndex(0);
+    ui->PlotTypeComboBox->setCurrentIndex(0);
     ui->stackedWidget->setCurrentIndex(0);
     ui->stackedWidget_2->setCurrentIndex(0);
     ui->tabWidget->setCurrentIndex(0);
@@ -91,8 +89,8 @@ plotNetworkData::plotNetworkData(QWidget *parent)
     ui->PortLabel->setText("8000");
 
     ui->StepIP->setText("192.168.0.39");
-    ui->UserID->setText("user");
-    ui->Password->setText("nrmk2013");
+    ui->UserID->setText("root");
+    ui->Password->setText("root");
 
     // Initial Gain setting
     ui->Kp_pos->setMaximum(10000);
@@ -119,7 +117,7 @@ plotNetworkData::plotNetworkData(QWidget *parent)
     ui->Kp_vel_2->setValue(300.0);
     ui->Ki_vel_2->setValue(200.0);
 
-    ui->Kp_vel->setMaximum(100);
+    ui->Np_vel->setMaximum(100);
     ui->Nc_vel->setMaximum(25);
     ui->rw_vel->setMaximum(10);
     ui->rw_vel->setSingleStep(0.01);
@@ -137,8 +135,6 @@ plotNetworkData::plotNetworkData(QWidget *parent)
 
     RunSignal = 0;
 
-//    MyThread m;
-//    connect(&MyThread,SIGNAL(newDataRecieved(QVector<double> x,QVector<double> y)),this,SLOT(plotNewValues(QVector<double> x,QVector<double> y)));
     ServerThread *thread = new ServerThread(this);
     connect(thread,SIGNAL(newDataRecieved(QVector<double> ,QVector<double> )),this,SLOT(plotNewValues(QVector<double> ,QVector<double> )));
     thread->start();
@@ -149,9 +145,17 @@ plotNetworkData::~plotNetworkData()
     delete ui;
 }
 
+double string_to_double( const string& s )
+{
+  istringstream i(s);
+  double x;
+  if (!(i >> x))
+    return 0;
+  return x;
+}
+
 void plotNetworkData::plotNewValues(QVector<double> x, QVector<double> y)
 {
-//    qDebug()<< "Got data x:"<<x<<" y:"<<y;
     if (RunSignal){
         ui->customPlot->graph(0)->setData(x, y);
         ui->customPlot->rescaleAxes();
@@ -169,10 +173,6 @@ void plotNetworkData::clearPlot()
     ui->customPlot->graph(0)->data()->clear();
     ui->customPlot->replot();
     ui->customPlot->update();
-}
-
-void plotNetworkData::on_clearButton_2_clicked()
-{
     ui->MagPlot->graph(0)->data()->clear();
     ui->MagPlot->replot();
     ui->MagPlot->update();
@@ -181,7 +181,17 @@ void plotNetworkData::on_clearButton_2_clicked()
     ui->PhasePlot->update();
 }
 
-void plotNetworkData::on_plotTypeComboBox_currentIndexChanged(int index)
+void plotNetworkData::on_clearButton_clicked()
+{
+    clearPlot();
+}
+
+void plotNetworkData::on_clearButton_2_clicked()
+{
+    clearPlot();
+}
+
+void plotNetworkData::on_CtrlModeComboBox_currentIndexChanged(int index)
 {
     switch (index) {
         case 0:
@@ -221,12 +231,11 @@ void plotNetworkData::on_plotTypeComboBox_currentIndexChanged(int index)
             ui->Tar_value->setText(QString::number(-MaxTor));
         }
     }
-
     ui->customPlot->replot();
     ui->customPlot->update();
 }
 
-void plotNetworkData::on_plotTypeComboBox_2_currentIndexChanged(int index)
+void plotNetworkData::on_CtrlModeComboBox_2_currentIndexChanged(int index)
 {
     switch (index) {
         case 0:
@@ -242,7 +251,6 @@ void plotNetworkData::on_plotTypeComboBox_2_currentIndexChanged(int index)
                 ui->ControllerComboBox_2->addItems({"FirmWare Contoller"});
                 break;
     }
-
     CtrlMode = index;
     qDebug()  << "CtrlMode:"<< CtrlMode;
 }
@@ -259,7 +267,7 @@ void plotNetworkData::on_ControllerComboBox_2_currentIndexChanged(int index)
     Controller = index;
 }
 
-void plotNetworkData::on_lineStyleComboBox_currentIndexChanged(int index)
+void plotNetworkData::on_PlotTypeComboBox_currentIndexChanged(int index)
 {
     PlotType = index;
     if(PlotType == 0){
@@ -271,11 +279,6 @@ void plotNetworkData::on_lineStyleComboBox_currentIndexChanged(int index)
     }
     ui->customPlot->replot();
     ui->customPlot->update();
-}
-
-void plotNetworkData::on_clearButton_clicked()
-{
-    clearPlot();
 }
 
 void plotNetworkData::on_setButton_clicked()
@@ -357,7 +360,7 @@ void plotNetworkData::on_connectButton_clicked()
     QString Np = ui->Np_vel->text();
     QString Nc = ui->Nc_vel->text();
     QString rw = ui->rw_vel->text();
-    QString Command = "cd release; sudo ./TCP_test_GUI 0 0" + Empt + HOST + Empt + PORT + Empt + Np + Empt + Nc + Empt + rw;
+    QString Command = "cd /home/user/release; ./TCP_test_GUI 0 0" + Empt + HOST + Empt + PORT + Empt + Np + Empt + Nc + Empt + rw;
 
     rc = ssh_channel_request_exec(channel, Command.toStdString().c_str());
     if (rc != SSH_OK){
@@ -369,7 +372,7 @@ void plotNetworkData::on_connectButton_clicked()
 
 }
 
-void plotNetworkData::on_disconnectButton_clicked()
+void plotNetworkData::disConnect()
 {
     if(ui->ConnectionState->text() == "Connect"){
         RunSignal = 0;   // Stop
@@ -384,6 +387,11 @@ void plotNetworkData::on_disconnectButton_clicked()
 
         ui->ConnectionState->setText("Disconnect");
     }
+}
+
+void plotNetworkData::on_disconnectButton_clicked()
+{
+    disConnect();
 }
 
 void plotNetworkData::on_ControllerComboBox_currentIndexChanged(const QString &arg1)
@@ -460,6 +468,10 @@ void plotNetworkData::on_runButton_clicked()
 
 void plotNetworkData::on_runButton_2_clicked()
 {
+    ui->State_2->setText("Wait some second...");
+    disConnect();
+    sleep(3);
+
     OnOffSignal = 1; // On
     RunSignal  = 1;  // Run
 
@@ -483,7 +495,7 @@ void plotNetworkData::on_runButton_2_clicked()
     ///// Connect to server /////
     rc = ssh_connect(BP_session);
     if (rc != SSH_OK){
-        ui->ConnectionState->setText("Disconnect");
+        ui->State_2->setText("Connection fail");
     }
 
     ///// Password /////
@@ -491,7 +503,7 @@ void plotNetworkData::on_runButton_2_clicked()
     password = (char *)Pass_Word.toStdString().c_str();
     rc = ssh_userauth_password(BP_session, NULL, password);
     if (rc != SSH_AUTH_SUCCESS){
-        ui->ConnectionState->setText("Disconnect");
+        ui->State_2->setText("Connection fail");
     }
 
     ///// Make Channel /////
@@ -503,11 +515,14 @@ void plotNetworkData::on_runButton_2_clicked()
     QString Np = ui->Np_vel_2->text();
     QString Nc = ui->Nc_vel_2->text();
     QString rw = ui->rw_vel_2->text();
-    QString Command = "cd release; sudo ./TCP_test_GUI 0 1" + Empt + HOST + Empt + PORT + Empt + Np + Empt + Nc + Empt + rw;
+    QString Command = "cd /home/user/release; ./TCP_test_GUI 0 1" + Empt + HOST + Empt + PORT + Empt + Np + Empt + Nc + Empt + rw;
 
     rc = ssh_channel_request_exec(BPchannel, Command.toStdString().c_str());
     if (rc != SSH_OK){
-        ui->ConnectionState->setText("Disconnect");
+        ui->State_2->setText("Connection fail");
+    }
+    else{
+        ui->State_2->setText("Running...");
     }
 
     ssh_channel_send_eof(BPchannel);
@@ -517,7 +532,6 @@ void plotNetworkData::on_runButton_2_clicked()
     ssh_disconnect(BP_session);
     ssh_free(BP_session);
 
-    ui->State_2->setText("Running...");
 }
 
 void plotNetworkData::on_stopButton_clicked()
@@ -525,20 +539,16 @@ void plotNetworkData::on_stopButton_clicked()
     RunSignal = 0; // Stop
 }
 
+void plotNetworkData::on_stopButton_2_clicked()
+{
+    disConnect();
+}
+
 void plotNetworkData::on_saveButton_clicked()
 {
     HOST = ui->IPAddLabel->text();
     PORT = ui->PortLabel->text();
     ui->Saved->setText("Saved!");
-}
-
-double string_to_double( const string& s )
-{
-  istringstream i(s);
-  double x;
-  if (!(i >> x))
-    return 0;
-  return x;
 }
 
 void plotNetworkData::on_plotButton_clicked()
@@ -576,136 +586,141 @@ void plotNetworkData::on_plotButton_clicked()
 
     QString sModulePath = QCoreApplication::applicationDirPath();
     qDebug()  << "sModulePath:"<< sModulePath;
-
     fs.open("CORE200_LoadTest_Data.csv",ios::in);
 
-    // Contain first information index (L+1)
-    for (int i = 0; i < L+1; ++i ) {
-        getline(fs,str_buf);
-        stringstream sstream(str_buf);
-        for (int j = 0; j < 12; ++j ){
-                getline(sstream,data,',');
-                DATA.push_back(data);
-                QString qdata = QString::fromStdString(data);
-            }
-    }
-
-    for (int k = 0; k < (int)DATA.size(); k++){
-        if (k > 11){
-            if (k%12 == 1){
-                act_tor[at_cnt] = string_to_double(DATA[k]);
-                at_cnt = at_cnt + 1;
-            }
-            if (k%12 == 2){
-                tar_tor[tt_cnt] = string_to_double(DATA[k]);
-                tt_cnt = tt_cnt + 1;
-            }
-            if (k%12 == 3){
-                act_pos[ap_cnt] = string_to_double(DATA[k]);
-                ap_cnt = ap_cnt + 1;
-            }
-            if (k%12 == 4){
-                tar_pos[tp_cnt] = string_to_double(DATA[k]);
-                tp_cnt = tp_cnt + 1;
-            }
-            if (k%12 == 6){
-                tar_vel[tv_cnt] = string_to_double(DATA[k]);
-                tv_cnt = tv_cnt + 1;
-            }
-            if (k%12 == 7){
-                act_vel[av_cnt] = string_to_double(DATA[k]);
-                av_cnt = av_cnt + 1;
+    if(fs.is_open()){
+        // Contain first information index (L+1)
+        for (int i = 0; i < L+1; ++i ) {
+            getline(fs,str_buf);
+            stringstream sstream(str_buf);
+            for (int j = 0; j < 12; ++j ){
+                    getline(sstream,data,',');
+                    DATA.push_back(data);
+                    QString qdata = QString::fromStdString(data);
             }
         }
-    }
-    qDebug()  << "act_ini[iq][0]"<< act_pos[0];
-    fs.close();
 
-    fftw_complex *act_ini, *act_fin;
-    act_ini = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * nbin);
-    act_fin = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * nbin);
-    fftw_complex *tar_ini, *tar_fin;
-    tar_ini = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * nbin);
-    tar_fin = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * nbin);
-    fftw_plan act_fft;
-    act_fft = fftw_plan_dft_1d(nbin, act_ini, act_fin, FFTW_FORWARD, FFTW_ESTIMATE);
-    fftw_plan tar_fft;
-    tar_fft = fftw_plan_dft_1d(nbin, tar_ini, tar_fin, FFTW_FORWARD, FFTW_ESTIMATE);
-
-    // Data select & copy
-    if (CtrlMode==0){
-        memcpy(&data_act, &act_pos, sizeof(act_pos));
-        memcpy(&data_tar, &tar_pos, sizeof(tar_pos));
-    }
-    if (CtrlMode==1){
-        memcpy(&data_act, &act_vel, sizeof(act_vel));
-        memcpy(&data_tar, &tar_vel, sizeof(tar_vel));
-    }
-    if (CtrlMode==2){
-        memcpy(&data_act, &act_tor, sizeof(act_tor));
-        memcpy(&data_tar, &tar_tor, sizeof(tar_tor));
-    }
-
-    for (int iq = 0; iq < nbin; iq++) {
-        act_ini[iq][0] = data_act[iq];   // Real
-        act_ini[iq][1] = 0.0;            // Imag
-        tar_ini[iq][0] = data_tar[iq];   // Real
-        tar_ini[iq][1] = 0.0;            // Imag
-    }
-
-    fftw_execute(act_fft);
-    fftw_execute(tar_fft);
-
-    for (int n = 0; n < nbin ; n++){
-        act_Mag   = sqrt(pow(act_fin[n][0], 2.0) + pow(act_fin[n][1], 2.0));
-        act_Phase = atan2(act_fin[n][1], act_fin[n][0]);
-
-        tar_Mag   = sqrt(pow(tar_fin[n][0], 2.0) + pow(tar_fin[n][1], 2.0));
-        tar_Phase = atan2(tar_fin[n][1], tar_fin[n][0]);
-
-        TF_Mag[n]   = 20*log10(act_Mag/tar_Mag);
-        TF_Phase[n] = (act_Phase - tar_Phase)*180.0/PI;
-
-        if (TF_Phase[n] > 90){
-            TF_Phase[n] = -720 + TF_Phase[n];
+        for (int k = 0; k < (int)DATA.size(); k++){
+            if (k > 11){
+                if (k%12 == 1){
+                    act_tor[at_cnt] = string_to_double(DATA[k]);
+                    at_cnt = at_cnt + 1;
+                }
+                if (k%12 == 2){
+                    tar_tor[tt_cnt] = string_to_double(DATA[k]);
+                    tt_cnt = tt_cnt + 1;
+                }
+                if (k%12 == 3){
+                    act_pos[ap_cnt] = string_to_double(DATA[k]);
+                    ap_cnt = ap_cnt + 1;
+                }
+                if (k%12 == 4){
+                    tar_pos[tp_cnt] = string_to_double(DATA[k]);
+                    tp_cnt = tp_cnt + 1;
+                }
+                if (k%12 == 6){
+                    tar_vel[tv_cnt] = string_to_double(DATA[k]);
+                    tv_cnt = tv_cnt + 1;
+                }
+                if (k%12 == 7){
+                    act_vel[av_cnt] = string_to_double(DATA[k]);
+                    av_cnt = av_cnt + 1;
+                }
+            }
         }
+
+        fs.close();
+
+        fftw_complex *act_ini, *act_fin;
+        act_ini = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * nbin);
+        act_fin = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * nbin);
+        fftw_complex *tar_ini, *tar_fin;
+        tar_ini = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * nbin);
+        tar_fin = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * nbin);
+        fftw_plan act_fft;
+        act_fft = fftw_plan_dft_1d(nbin, act_ini, act_fin, FFTW_FORWARD, FFTW_ESTIMATE);
+        fftw_plan tar_fft;
+        tar_fft = fftw_plan_dft_1d(nbin, tar_ini, tar_fin, FFTW_FORWARD, FFTW_ESTIMATE);
+
+        // Data select & copy
+        if (CtrlMode==0){
+            memcpy(&data_act, &act_pos, sizeof(act_pos));
+            memcpy(&data_tar, &tar_pos, sizeof(tar_pos));
+        }
+        if (CtrlMode==1){
+            memcpy(&data_act, &act_vel, sizeof(act_vel));
+            memcpy(&data_tar, &tar_vel, sizeof(tar_vel));
+        }
+        if (CtrlMode==2){
+            memcpy(&data_act, &act_tor, sizeof(act_tor));
+            memcpy(&data_tar, &tar_tor, sizeof(tar_tor));
+        }
+
+        for (int iq = 0; iq < nbin; iq++) {
+            act_ini[iq][0] = data_act[iq];   // Real
+            act_ini[iq][1] = 0.0;            // Imag
+            tar_ini[iq][0] = data_tar[iq];   // Real
+            tar_ini[iq][1] = 0.0;            // Imag
+        }
+
+        fftw_execute(act_fft);
+        fftw_execute(tar_fft);
+
+        for (int n = 0; n < nbin ; n++){
+            act_Mag   = sqrt(pow(act_fin[n][0], 2.0) + pow(act_fin[n][1], 2.0));
+            act_Phase = atan2(act_fin[n][1], act_fin[n][0]);
+
+            tar_Mag   = sqrt(pow(tar_fin[n][0], 2.0) + pow(tar_fin[n][1], 2.0));
+            tar_Phase = atan2(tar_fin[n][1], tar_fin[n][0]);
+
+            TF_Mag[n]   = 20*log10(act_Mag/tar_Mag);
+            TF_Phase[n] = (act_Phase - tar_Phase)*180.0/PI;
+
+            if (TF_Phase[n] > 90){
+                TF_Phase[n] = -720 + TF_Phase[n];
+            }
+        }
+
+        for (int i=0; i<IndexNum+1; i++){
+            x_Mag.push_back(FrqVec[i]);
+            y_Mag.push_back(TF_Mag[i]);
+            x_Phase.push_back(FrqVec[i]);
+            y_Phase.push_back(TF_Phase[i]);
+        }
+
+        // 동적으로 할당된 메모리 해제
+        fftw_destroy_plan(act_fft);
+        fftw_destroy_plan(tar_fft);
+        fftw_free(act_ini);
+        fftw_free(act_fin);
+        fftw_free(tar_ini);
+        fftw_free(tar_fin);
+
+        ui->MagPlot->graph(0)->setData(x_Mag, y_Mag);
+        ui->MagPlot->rescaleAxes();
+        ui->MagPlot->replot();
+        ui->MagPlot->update();
+
+        ui->PhasePlot->graph(0)->setData(x_Phase, y_Phase);
+        ui->PhasePlot->rescaleAxes();
+        ui->PhasePlot->replot();
+        ui->PhasePlot->update();
     }
 
-    for (int i=0; i<IndexNum+1; i++){
-        x_Mag.push_back(FrqVec[i]);
-        y_Mag.push_back(TF_Mag[i]);
-        x_Phase.push_back(FrqVec[i]);
-        y_Phase.push_back(TF_Phase[i]);
+    else{
+        ui->State_2->setText("Data file doesn't exist");
     }
-
-    // 동적으로 할당된 메모리 해제
-    fftw_destroy_plan(act_fft);
-    fftw_destroy_plan(tar_fft);
-    fftw_free(act_ini);
-    fftw_free(act_fin);
-    fftw_free(tar_ini);
-    fftw_free(tar_fin);
-
-    ui->MagPlot->graph(0)->setData(x_Mag, y_Mag);
-    ui->MagPlot->rescaleAxes();
-    ui->MagPlot->replot();
-    ui->MagPlot->update();
-
-    ui->PhasePlot->graph(0)->setData(x_Phase, y_Phase);
-    ui->PhasePlot->rescaleAxes();
-    ui->PhasePlot->replot();
-    ui->PhasePlot->update();
 }
 
 void plotNetworkData::on_tabWidget_currentChanged(int index)
 {
     Mode = index;
     if (Mode == 0){
-        CtrlMode = ui->plotTypeComboBox->currentIndex();
+        CtrlMode = ui->CtrlModeComboBox->currentIndex();
         Controller = ui->ControllerComboBox->currentIndex();
     }
     else if(Mode == 1){
-        CtrlMode = ui->plotTypeComboBox_2->currentIndex();
+        CtrlMode = ui->CtrlModeComboBox_2->currentIndex();
         Controller = ui->ControllerComboBox_2->currentIndex();
     }
 }
@@ -714,90 +729,100 @@ void plotNetworkData::on_copyButton_clicked()
 {
     // Copy .csv from step pc
 
-    QString Step_IP = ui->StepIP->text();
-    QString User_ID = ui->UserID->text();
-    QString Pass_Word = ui->Password->text();
-    int size, mode;
-    char *filename, *buffer;
+     QString Step_IP = ui->StepIP->text();
+     QString User_ID = ui->UserID->text();
+     QString Pass_Word = ui->Password->text();
+     int size, mode;
+     char *filename, *buffer;
 
-    ///// Open session and set options /////
-    BP_session = ssh_new();
-    if (BP_session == NULL)
-      exit(-1);
-    ssh_options_set(BP_session, SSH_OPTIONS_HOST, Step_IP.toStdString().c_str());
-    ssh_options_set(BP_session, SSH_OPTIONS_USER, User_ID.toStdString().c_str());
+     ///// Open session and set options /////
+     BP_session = ssh_new();
+     if (BP_session == NULL)
+       exit(-1);
+     ssh_options_set(BP_session, SSH_OPTIONS_HOST, Step_IP.toStdString().c_str());
+     ssh_options_set(BP_session, SSH_OPTIONS_USER, User_ID.toStdString().c_str());
 
-    ///// Connect to server /////
-    rc = ssh_connect(BP_session);
-    if (rc != SSH_OK){
-        ui->ConnectionState->setText("Disconnect");
-    }
+     ///// Connect to server /////
+     rc = ssh_connect(BP_session);
+     if (rc != SSH_OK){
+         ui->ConnectionState->setText("Disconnect");
+     }
 
-    ///// Password /////
-    char *password;
-    password = (char *)Pass_Word.toStdString().c_str();
-    rc = ssh_userauth_password(BP_session, NULL, password);
-    if (rc != SSH_AUTH_SUCCESS){
-        ui->ConnectionState->setText("Disconnect");
-    }
+     ///// Password /////
+     char *password;
+     password = (char *)Pass_Word.toStdString().c_str();
+     rc = ssh_userauth_password(BP_session, NULL, password);
+     if (rc != SSH_AUTH_SUCCESS){
+         ui->ConnectionState->setText("Disconnect");
+     }
 
-    scp = ssh_scp_new
-      (BP_session, SSH_SCP_READ, "release/CORE200_LoadTest_Data.csv");
-    if (scp == NULL){
-      fprintf(stderr, "Error allocating scp session: %s\n",
-              ssh_get_error(BP_session));
-    }
+     scp = ssh_scp_new
+       (BP_session, SSH_SCP_READ, "/home/user/release/CORE200_LoadTest_Data.csv");
+     if (scp == NULL){
+       fprintf(stderr, "Error allocating scp session: %s\n",
+               ssh_get_error(BP_session));
+     }
 
-    rc = ssh_scp_init(scp);
-    if (rc != SSH_OK){
-      fprintf(stderr, "Error initializing scp session: %s\n",
-              ssh_get_error(BP_session));
-      ssh_scp_free(scp);
-    }
+     rc = ssh_scp_init(scp);
+     if (rc != SSH_OK){
+       fprintf(stderr, "Error initializing scp session: %s\n",
+               ssh_get_error(BP_session));
+       ssh_scp_free(scp);
+     }
 
-    rc = ssh_scp_pull_request(scp);
-    if (rc != SSH_SCP_REQUEST_NEWFILE){
-      fprintf(stderr, "Error receiving information about file: %s\n", ssh_get_error(BP_session));
-    }
+     rc = ssh_scp_pull_request(scp);
+     if (rc != SSH_SCP_REQUEST_NEWFILE){
+       fprintf(stderr, "Error receiving information about file: %s\n", ssh_get_error(BP_session));
+     }
 
-    size = ssh_scp_request_get_size(scp);
-    filename = strdup(ssh_scp_request_get_filename(scp));
-    mode = ssh_scp_request_get_permissions(scp);
-    printf("Receiving file %s, size %d, permissions 0%o\n", filename, size, mode);
-    free(filename);
+     size = ssh_scp_request_get_size(scp);
+     filename = strdup(ssh_scp_request_get_filename(scp));
+     mode = ssh_scp_request_get_permissions(scp);
+     printf("Receiving file %s, size %d, permissions 0%o\n", filename, size, mode);
+     free(filename);
 
-    buffer = (char *)malloc(size);
-    if (buffer == NULL){
-      fprintf(stderr, "Memory allocation error\n");
-    }
+     buffer = (char *)malloc(size);
+     if (buffer == NULL){
+       fprintf(stderr, "Memory allocation error\n");
+     }
 
-    ssh_scp_accept_request(scp);
+     ssh_scp_accept_request(scp);
 
-    int r = 0;
+     int r = 0;
 
-    while (r < size){
-        int st = ssh_scp_read(scp, buffer+r, size-r);
-        r += st;
-    }
+     while (r < size){
+         int st = ssh_scp_read(scp, buffer+r, size-r);
+         r += st;
+     }
 
-    FILE*fp = fopen("CORE200_LoadTest_Data.csv","w");
+     FILE*fp = fopen("CORE200_LoadTest_Data.csv","w");
 
-    fwrite(buffer, size, 1, fp);
-    free(buffer);
+     fwrite(buffer, size, 1, fp);
+     free(buffer);
 
-    rc = ssh_scp_pull_request(scp);
-    if (rc != SSH_SCP_REQUEST_EOF){
-      fprintf(stderr, "Unexpected request: %s\n",
-              ssh_get_error(BP_session));
-    }
+     rc = ssh_scp_pull_request(scp);
+     if (rc != SSH_SCP_REQUEST_EOF){
+       fprintf(stderr, "Unexpected request: %s\n",
+               ssh_get_error(BP_session));
+     }
+     else{
+        ui->State_2->setText("Copy complete!");
+     }
 
-    fclose(fp);
+     fclose(fp);
 
-    ssh_scp_close(scp);
-    ssh_scp_free(scp);
+     ssh_scp_close(scp);
+     ssh_scp_free(scp);
 
-    ssh_disconnect(BP_session);
-    ssh_free(BP_session);
+     ssh_disconnect(BP_session);
+     ssh_free(BP_session);
 
-    ui->State_2->setText("Copy complete!");
 }
+
+void plotNetworkData::closeEvent(QCloseEvent *event)
+{
+    disConnect();
+    QWidget::closeEvent(event);
+}
+
+

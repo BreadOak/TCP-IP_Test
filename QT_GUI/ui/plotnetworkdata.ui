@@ -24,13 +24,13 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="Control_tab">
      <attribute name="title">
       <string>Control</string>
      </attribute>
-     <widget class="QComboBox" name="lineStyleComboBox">
+     <widget class="QComboBox" name="PlotTypeComboBox">
       <property name="geometry">
        <rect>
         <x>20</x>
@@ -106,7 +106,7 @@
        <string>Plot Type</string>
       </property>
      </widget>
-     <widget class="QComboBox" name="plotTypeComboBox">
+     <widget class="QComboBox" name="CtrlModeComboBox">
       <property name="geometry">
        <rect>
         <x>20</x>
@@ -1321,7 +1321,7 @@
        </widget>
       </widget>
      </widget>
-     <widget class="QComboBox" name="plotTypeComboBox_2">
+     <widget class="QComboBox" name="CtrlModeComboBox_2">
       <property name="geometry">
        <rect>
         <x>20</x>
